@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/24 12:24:38 by tblaase           #+#    #+#             */
-/*   Updated: 2022/04/24 13:29:43 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/04/25 14:32:47 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ namespace ft
 					return (vector_iterator(_ptr + diff));
 				}
 
-				vector_iterator	&operato+-=(diff_type diff)
+				vector_iterator	&operator+=(diff_type diff)
 				{
 					this->_ptr += diff;
 
