@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:50:45 by tblaase           #+#    #+#             */
-/*   Updated: 2022/04/27 20:51:37 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/04/27 23:23:14 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ namespace ft
 				explicit vector(const allocator_type& alloc = allocator_type()):
 								_size(0), _capacity(0), _alloc(alloc)
 				{
+					if (this->_capacity < 0 || this->capacity > this->max_size())
+						throw (std::length_error("ft::vector"));
 					try
 					{
 						this->_array = _alloc.allocate(this->_capacity);
@@ -82,15 +84,17 @@ namespace ft
 								const allocator_type& alloc = allocator_type()):
 								_size(n), _capacity(n), _alloc(alloc)
 				{
-					try
-					{
+					if (this->_capacity < 0 || this->_capacity > this->max_size())
+						throw (std::length_error("ft::vector"));
+					// try
+					// {
 						this->_array = _alloc.allocate(this->_capacity);
-					}
-					catch (std::exception &e)
-					{
-						std::cerr << "\033[31mAn error occured in the fill constructor while allocating your vector: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
-						throw (std::bad_alloc());
-					}
+					// }
+					// catch (std::exception &e)
+					// {
+					// 	std::cerr << "\033[31mAn error occured in the fill constructor while allocating your vector: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
+					// 	throw (std::bad_alloc());
+					// }
 					for (size_type i = 0; i < n; ++i)
 						this->_alloc.construct(this->_array + i, val);
 				}
@@ -102,6 +106,8 @@ namespace ft
 					explicit vector(InputIterator it_start, InputIterator it_end, const allocator_type &alloc = allocator_type(),
 					typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL): _alloc(alloc)
 					{
+						if (this->_distance(it_start, it_end) <= 0 || this->_distance(it_start, it_end) >= this->max_size())
+							throw (std::length_error("ft::vector"));
 						// still has to be understood, then implemented
 						(void)it_start;
 						(void)it_end;
@@ -162,23 +168,23 @@ namespace ft
 
 				void	resize(size_type n, value_type val = value_type())
 				{
-					if (n < 0)
-						throw (std::length_error("vector"));
+					if (n < 0 || n > this->max_size())
+						throw (std::length_error("ft::vector"));
 					if (n < this->_size)
 						this->_size = n;
 					else if (n < (this->_capacity + this->_capacity))
 					{
 						// pointer tmp = this->_array;
 						// size_type tmp_cap = this->_capacity;
-						try
-						{
+						// try
+						// {
 							this->reserve((size_type)(this->_capacity + this->_capacity));
-						}
-						catch (std::exception &e)
-						{
-							std::cerr << "\033[31mWhile resizing your vector there was an exception: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
-							throw (std::bad_alloc());
-						}
+						// }
+						// catch (std::exception &e)
+						// {
+						// 	std::cerr << "\033[31mWhile resizing your vector there was an exception: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
+						// 	throw (std::bad_alloc());
+						// }
 						// for (size_type i = 0; i < this->_size; ++i)
 						// 	this->_alloc.construct(this->_array + i, tmp[i]); // probably not needed, check it though
 
@@ -190,15 +196,15 @@ namespace ft
 					}
 					else
 					{
-						try
-						{
+						// try
+						// {
 							this->reserve(n);
-						}
-						catch (std::exception &e)
-						{
-							std::cerr << "\033[31mWhile resizing your vector there was an exception: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
-							throw (std::bad_alloc());
-						}
+						// }
+						// catch (std::exception &e)
+						// {
+						// 	std::cerr << "\033[31mWhile resizing your vector there was an exception: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
+						// 	throw (std::bad_alloc());
+						// }
 					}
 
 					this->_size = n;
@@ -217,7 +223,7 @@ namespace ft
 				void	reserve(size_type n)
 				{
 					if(n > this->max_size())
-						throw (std::length_error("vector"));
+						throw (std::length_error("ft::vector"));
 					else if (n <= this->_capacity)
 						return ;
 					pointer tmp = this->_array;
@@ -244,15 +250,8 @@ namespace ft
 					this->_alloc.deallocate(tmp, tmp_cap);
 				}
 
-				void	clear()
-				{
-					for (size_type i = 0; i < _size; ++i)
-						this->_alloc.destroy(this->_array + i);
-					this->_size = 0;
-				}
-
 				// ##### Member functions for element access #####
-				// overloads for []
+
 				reference		operator[](size_type pos)
 				{
 					return (this->_array[pos]);
@@ -266,14 +265,14 @@ namespace ft
 				reference at (size_type n)
 				{
 					if (n >= this->size() || n < 0)
-						throw (std::out_of_range("vector"));
+						throw (std::out_of_range("ft::vector"));
 					return (this->_array[n]);
 				}
 
 				const_reference at (size_type n) const
 				{
 					if (n >= this->size() || n < 0)
-						throw std::out_of_range("vector");
+						throw std::out_of_range("ft::vector");
 					return (this->_array[n]);
 				}
 
@@ -297,6 +296,14 @@ namespace ft
 					return (this->_array[this->_size - 1]);
 				}
 
+				// ##### Member functions for Modifiers #####
+
+				void	clear()
+				{
+					for (size_type i = 0; i < _size; ++i)
+						this->_alloc.destroy(this->_array + i);
+					this->_size = 0;
+				}
 
 	};
 }
