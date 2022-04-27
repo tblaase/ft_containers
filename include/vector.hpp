@@ -17,7 +17,7 @@
 #include <memory>
 #include <vector>
 
-#include "utils/vector_iterator.hpp"
+#include "utils/random_access_iterator.hpp"
 #include "utils/utils.hpp"
 
 namespace ft
@@ -30,34 +30,34 @@ namespace ft
 				typedef Allocator										allocator_type;
 				typedef typename allocator_type::reference				reference;
 				typedef typename allocator_type::const_reference		const_reference;
-				// typedef ft::random_access_iterator<value_type>			iterator;
-				// typedef ft::random_access_iterator<const value_type>	const_iterator;
+				typedef ft::random_access_iterator<value_type>			iterator;
+				typedef ft::random_access_iterator<const value_type>	const_iterator;
 				typedef typename allocator_type::size_type				size_type;
 				typedef typename allocator_type::difference_type		difference_type;
 				typedef typename allocator_type::pointer				pointer;
 				typedef typename allocator_type::const_pointer			const_pointer;
-				// typedef std::reverse_iterator<iterator>					reverse_iterator;
-				// typedef std::reverse_iterator<const_iterator>			const_reverse_iterator;
+				typedef std::reverse_iterator<iterator>					reverse_iterator;
+				typedef std::reverse_iterator<const_iterator>			const_reverse_iterator;
 		private:
 				pointer			_array;
 				size_type		_size;
 				size_type		_capacity;
 				allocator_type	_alloc;
 
-				// template <class InputIterator>
-				// size_type		_distance(InputIterator first, InputIterator last)
-				// {
-				// 	size_type	res;
+				template <class InputIterator>
+				size_type		_distance(InputIterator first, InputIterator last)
+				{
+					size_type	res;
 
-				// 	res = 0;
-				// 	while (first != last)
-				// 	{
-				// 		res++;
-				// 		first++;
-				// 	}
+					res = 0;
+					while (first != last)
+					{
+						res++;
+						first++;
+					}
 
-				// 	return (res);
-				// }
+					return (res);
+				}
 
 		public:
 				// different default constructor

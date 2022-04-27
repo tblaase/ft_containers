@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector_iterator.hpp                                :+:      :+:    :+:   */
+/*   random_access_iterator.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/24 12:24:38 by tblaase           #+#    #+#             */
-/*   Updated: 2022/04/25 14:32:47 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/04/27 17:04:24 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 namespace ft
 {
 	template<class Iter>
-	class vector_iterator
+	class random_access_iterator
 	{
 		public:
 				typedef Iter												it_type;
@@ -31,21 +31,21 @@ namespace ft
 				it_type _ptr;
 
 		public:
-				vector_iterator(): _ptr(NULL)
+				random_access_iterator(): _ptr(NULL)
 				{}
-				vector_iterator(pointer ptr): _ptr(ptr)
+				random_access_iterator(pointer ptr): _ptr(ptr)
 				{}
 				template<class It>
-					vector_iterator(const vector_iterator<It> &src)
+					random_access_iterator(const random_access_iterator<It> &src)
 					{
 						*this = src;
 					}
 
-				~vector_iterator()
+				~random_access_iterator()
 				{};
 
 				template<class It>
-					vector_iterator&operator=(const vector_iterator<It> &src)
+					random_access_iterator&operator=(const random_access_iterator<It> &src)
 					{
 						this->_ptr = src.base();
 
@@ -72,56 +72,56 @@ namespace ft
 					return (this->_ptr + diff);
 				}
 
-				vector_iterator	&operator++()
+				random_access_iterator	&operator++()
 				{
 					this->_ptr++;
 
 					return (*this);
 				}
 
-				vector_iterator	&operator++(int)
+				random_access_iterator	&operator++(int)
 				{
-					vector_iterator tmp = *this;
+					random_access_iterator tmp = *this;
 
 					++(*this);
 
 					return (tmp);
 				}
 
-				vector_iterator	&operator--()
+				random_access_iterator	&operator--()
 				{
 					this->_ptr--;
 
 					return (*this);
 				}
 
-				vector_iterator	&operator--(int)
+				random_access_iterator	&operator--(int)
 				{
-					vector_iterator tmp = *this;
+					random_access_iterator tmp = *this;
 
 					--(*this);
 
 					return (tmp);
 				}
 
-				vector_iterator	operator+(diff_type diff)// maybe const is needed here
+				random_access_iterator	operator+(diff_type diff)// maybe const is needed here
 				{
-					return (vector_iterator(_ptr + diff));
+					return (random_access_iterator(_ptr + diff));
 				}
 
-				vector_iterator	&operator+=(diff_type diff)
+				random_access_iterator	&operator+=(diff_type diff)
 				{
 					this->_ptr += diff;
 
 					return (*this);
 				}
 
-				vector_iterator	operator-(diff_type diff)// maybe const is needed here
+				random_access_iterator	operator-(diff_type diff)// maybe const is needed here
 				{
-					return (vector_iterator(_ptr - diff));
+					return (random_access_iterator(_ptr - diff));
 				}
 
-				vector_iterator	&operator-=(diff_type diff)
+				random_access_iterator	&operator-=(diff_type diff)
 				{
 					this->_ptr -= diff;
 
@@ -131,52 +131,56 @@ namespace ft
 
 	// non-member functions
 	template<class iter1, class iter2>
-		typename ft::vector_iterator<iter1>::diff_type	operator+(const ft::vector_iterator<iter1> &left, const ft::vector_iterator<iter2> &right)
+		typename ft::random_access_iterator<iter1>::diff_type	operator+(const ft::random_access_iterator<iter1> &left, const ft::random_access_iterator<iter2> &right)
 		{
 			return (left.base() + right.base());
 		}
 
 	template<class iter1, class iter2>
-		typename ft::vector_iterator<iter1>::diff_type	operator-(const ft::vector_iterator<iter1> &left, const ft::vector_iterator<iter2> &right)
+		typename ft::random_access_iterator<iter1>::diff_type	operator-(const ft::random_access_iterator<iter1> &left, const ft::random_access_iterator<iter2> &right)
 		{
 			return (left.base() - right.base());
 		}
 
 	template<class iter>
-		typename ft::vector_iterator<iter>::diff_type	operator+(ft::vector_iterator<iter> &iter1, typename ft::vector_iterator<iter>::diff_type diff) // maybe -= is needed as well
+		typename ft::random_access_iterator<iter>::diff_type	operator+(ft::random_access_iterator<iter> &iter1, typename ft::random_access_iterator<iter>::diff_type diff) // maybe -= is needed as well
 		{
 			iter1 += diff;
 			return (iter1);
 		}
 
 	template<class iter1, class iter2>
-		bool	operator==(const ft::vector_iterator<iter1> &left, const ft::vector_iterator<iter2> &right)
+		bool	operator==(const ft::random_access_iterator<iter1> &left, const ft::random_access_iterator<iter2> &right)
 		{
 			return (left.base() == right.base());
 		}
 
 	template<class iter1, class iter2>
-		bool	operator!=(const ft::vector_iterator<iter1> &left, const ft::vector_iterator<iter2> &right)
+		bool	operator!=(const ft::random_access_iterator<iter1> &left, const ft::random_access_iterator<iter2> &right)
 		{
 			return (left.base() != right.base());
 		}
+
 	template<class iter1, class iter2>
-		bool	operator<(const ft::vector_iterator<iter1> &left, const ft::vector_iterator<iter2> &right)
+		bool	operator<(const ft::random_access_iterator<iter1> &left, const ft::random_access_iterator<iter2> &right)
 		{
 			return (left.base() < right.base());
 		}
+
 	template<class iter1, class iter2>
-		bool	operator>(const ft::vector_iterator<iter1> &left, const ft::vector_iterator<iter2> &right)
+		bool	operator>(const ft::random_access_iterator<iter1> &left, const ft::random_access_iterator<iter2> &right)
 		{
 			return (left.base() > right.base());
 		}
+
 	template<class iter1, class iter2>
-		bool	operator<=(const ft::vector_iterator<iter1> &left, const ft::vector_iterator<iter2> &right)
+		bool	operator<=(const ft::random_access_iterator<iter1> &left, const ft::random_access_iterator<iter2> &right)
 		{
 			return (left.base() <= right.base());
 		}
+
 	template<class iter1, class iter2>
-		bool	operator>=(const ft::vector_iterator<iter1> &left, const ft::vector_iterator<iter2> &right)
+		bool	operator>=(const ft::random_access_iterator<iter1> &left, const ft::random_access_iterator<iter2> &right)
 		{
 			return (left.base() >= right.base());
 		}
