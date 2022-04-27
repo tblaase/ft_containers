@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:50:45 by tblaase           #+#    #+#             */
-/*   Updated: 2022/04/25 18:30:26 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/04/27 20:51:37 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,15 @@ namespace ft
 				explicit vector(const allocator_type& alloc = allocator_type()):
 								_size(0), _capacity(0), _alloc(alloc)
 				{
-					this->_array = this->_alloc.allocate(this->_capacity);
+					try
+					{
+						this->_array = _alloc.allocate(this->_capacity);
+					}
+					catch (std::exception &e)
+					{
+						std::cerr << "\033[31mAn error occured in the default constructor while allocating your vector: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
+						throw (std::bad_alloc());
+					}
 				}
 
 				// fill constructor
@@ -74,8 +82,16 @@ namespace ft
 								const allocator_type& alloc = allocator_type()):
 								_size(n), _capacity(n), _alloc(alloc)
 				{
-					this->_arr = _alloc.allocate(this->_capacity);
-					for (size_type i = 0; i < n; i++)
+					try
+					{
+						this->_array = _alloc.allocate(this->_capacity);
+					}
+					catch (std::exception &e)
+					{
+						std::cerr << "\033[31mAn error occured in the fill constructor while allocating your vector: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
+						throw (std::bad_alloc());
+					}
+					for (size_type i = 0; i < n; ++i)
 						this->_alloc.construct(this->_array + i, val);
 				}
 
@@ -83,7 +99,7 @@ namespace ft
 					// creates vector with the range between it_start and it_end
 					// and copies the corresponding values
 				template<class InputIterator>
-					explicit vector(InputIterator it_start, InputIterator it_end, const alloc &alloc = alloc(),
+					explicit vector(InputIterator it_start, InputIterator it_end, const allocator_type &alloc = allocator_type(),
 					typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL): _alloc(alloc)
 					{
 						// still has to be understood, then implemented
@@ -115,29 +131,80 @@ namespace ft
 					this->_size = src._size;
 					this->_capacity = src._capacity;
 					this->_alloc = src._alloc;
-					this->_array = this->_alloc.allocate(this->_capacity);
-					for (size_type i = 0; i < this->_size; i++)
+					try
+					{
+						this->_array = _alloc.allocate(this->_capacity);
+					}
+					catch (std::exception &e)
+					{
+						std::cerr << "\033[31mAn error occured in the copy constructor while allocating your vector: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
+						throw (std::bad_alloc());
+					}
+					for (size_type i = 0; i < this->_size; ++i)
 						this->_alloc.construct(this->_array + i, src._array[i]);
 
 					return (*this);
 				}
 
-				size()const
+				// ##### Member functions for Iterators #####
+
+				// ##### Member functions for Capacity #####
+
+				size_type size() const
 				{
 					return (this->_size);
 				}
 
-				max_size()const
+				size_type max_size() const
 				{
 					return (_alloc.max_size());
 				}
 
-				size_type	resize(size_type n, value_type val = value_type())
+				void	resize(size_type n, value_type val = value_type())
 				{
-					// implement resize :'D
+					if (n < 0)
+						throw (std::length_error("vector"));
+					if (n < this->_size)
+						this->_size = n;
+					else if (n < (this->_capacity + this->_capacity))
+					{
+						// pointer tmp = this->_array;
+						// size_type tmp_cap = this->_capacity;
+						try
+						{
+							this->reserve((size_type)(this->_capacity + this->_capacity));
+						}
+						catch (std::exception &e)
+						{
+							std::cerr << "\033[31mWhile resizing your vector there was an exception: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
+							throw (std::bad_alloc());
+						}
+						// for (size_type i = 0; i < this->_size; ++i)
+						// 	this->_alloc.construct(this->_array + i, tmp[i]); // probably not needed, check it though
+
+						if (this->_array[this->_size] != val) // only needed to make val used
+						{
+							for (size_type i = this->_size; i < this->_capacity; ++i)
+								this->_alloc.construct(this->_array + i, val);
+						}
+					}
+					else
+					{
+						try
+						{
+							this->reserve(n);
+						}
+						catch (std::exception &e)
+						{
+							std::cerr << "\033[31mWhile resizing your vector there was an exception: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
+							throw (std::bad_alloc());
+						}
+					}
+
+					this->_size = n;
 				}
 
-				size_type	capacity()const
+				size_type	capacity() const
 				{
 					return (this->_capacity);
 				}
@@ -149,33 +216,87 @@ namespace ft
 
 				void	reserve(size_type n)
 				{
-					if(n > ft::vector::max_size())
-						throw std::length_error(("vector reserve bigger than max: " + ft::vector::max_size())); // check if needed
-					else if (n < this->_capacity)
+					if(n > this->max_size())
+						throw (std::length_error("vector"));
+					else if (n <= this->_capacity)
 						return ;
-					pointer temp = this->_array;
-					size_type temp_cap = this->_capacity;
+					pointer tmp = this->_array;
+					size_type tmp_cap = this->_capacity;
 					this->_capacity = n;
-					this->_array = this->_alloc.allocate(this->_capacity);
-					if (this->_array == NULL)
+					try
 					{
-						this->_array = temp;
-						this->_capacity = temp_cap;
-						throw std::bad_alloc(("vector allocation failed: " + std::perror(NULL))); //check if needed
+						this->_array = this->_alloc.allocate(this->_capacity);
 					}
-					for (size_type i = 0; i < this->size; i++)
-						this->_alloc.construct(this->_array + i, temp._array[i]);
-					delete (temp);
+					catch (std::exception &e)
+					{
+						this->_array = tmp;
+						this->_capacity = tmp_cap;
+						throw (std::bad_alloc());
+					}
+					for (size_type i = 0; i < this->_size; ++i)
+						this->_alloc.construct(this->_array + i, tmp[i]);
 
+					for (size_type i = this->_size; i < this->_capacity; ++i) //maybe cut this out for optimization
+						this->_alloc.construct(this->_array + i, value_type());
+
+					for (size_type i = 0; i < this->_size; ++i)
+						this->_alloc.destroy(tmp + i);
+					this->_alloc.deallocate(tmp, tmp_cap);
 				}
 
-
-					void	clear()
+				void	clear()
 				{
-					for (size_type i = 0; i < _size; i++)
+					for (size_type i = 0; i < _size; ++i)
 						this->_alloc.destroy(this->_array + i);
 					this->_size = 0;
 				}
+
+				// ##### Member functions for element access #####
+				// overloads for []
+				reference		operator[](size_type pos)
+				{
+					return (this->_array[pos]);
+				}
+
+				const_reference	operator[](size_type pos) const
+				{
+					return (this->_array[pos]);
+				}
+
+				reference at (size_type n)
+				{
+					if (n >= this->size() || n < 0)
+						throw (std::out_of_range("vector"));
+					return (this->_array[n]);
+				}
+
+				const_reference at (size_type n) const
+				{
+					if (n >= this->size() || n < 0)
+						throw std::out_of_range("vector");
+					return (this->_array[n]);
+				}
+
+				reference front()
+				{
+					return (this->_array[0]);
+				}
+
+				const_reference front() const
+				{
+					return (this->array[0]);
+				}
+
+				reference back()
+				{
+					return (this->_array[this->_size - 1]);
+				}
+
+				const_reference back() const
+				{
+					return (this->_array[this->_size - 1]);
+				}
+
 
 	};
 }
