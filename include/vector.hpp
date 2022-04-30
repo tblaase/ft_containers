@@ -151,9 +151,48 @@ namespace ft
 					return (*this);
 				}
 
-				// ##### Member functions for Iterators #####
+		// ##### Member functions for Iterators #####
 
-				// ##### Member functions for Capacity #####
+				iterator	begin()
+				{
+					return(iterator(_array));
+				}
+
+				const_iterator	begin() const
+				{
+					return (const_iterator(_array));
+				}
+
+				iterator	end()
+				{
+					return (iterator(this->_array + this->_size));
+				}
+
+				const_iterator	end() const
+				{
+					return (const_iterator(this->_array + this->_size));
+				}
+
+				// reverse_iterator rbegin()
+				// {
+				// 	return (reverse_iterator(this->_array + this->_size));
+				// }
+
+				// const_reverse_iterator rbegin()
+				// {
+				// 	return (const_reverse_iterator(this->_array + this->_size));
+				// }
+
+				// reverse_iterator rend()
+				// {
+				// 	return (reverse_iterator(this->_array));
+				// }
+
+				// const_reverse_iterator rend()
+				// {
+				// 	return (const_reverse_iterator(this->_array));
+				// }
+		// ##### Member functions for Capacity #####
 
 				size_type size() const
 				{
