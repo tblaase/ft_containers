@@ -47,10 +47,9 @@ namespace ft
 				template <class InputIterator>
 				size_type		_distance(InputIterator first, InputIterator last)
 				{
-					size_type	res;
+					size_type	res = 0;
 
-					res = 0;
-					while (first != last)
+					while (first < last)
 					{
 						res++;
 						first++;
@@ -60,13 +59,13 @@ namespace ft
 				}
 
 		public:
-				// different default constructor
+				// default constructor
 					// creates vector with size of 0
 				explicit vector(const allocator_type& alloc = allocator_type()):
 								_size(0), _capacity(0), _alloc(alloc)
 				{
-					if (this->_capacity < 0 || this->capacity > this->max_size())
-						throw (std::length_error("ft::vector"));
+					if (this->_capacity > this->max_size())
+						throw (std::length_error("cannot create ft::vector larger than max_size()"));
 					try
 					{
 						this->_array = _alloc.allocate(this->_capacity);
@@ -84,11 +83,11 @@ namespace ft
 								const allocator_type& alloc = allocator_type()):
 								_size(n), _capacity(n), _alloc(alloc)
 				{
-					if (this->_capacity < 0 || this->_capacity > this->max_size())
-						throw (std::length_error("ft::vector"));
+					if (this->_capacity > this->max_size())
+						throw (std::length_error("cannot create ft::vector larger than max_size()"));
 					// try
 					// {
-						this->_array = _alloc.allocate(this->_capacity);
+					this->_array = _alloc.allocate(this->_capacity);
 					// }
 					// catch (std::exception &e)
 					// {
@@ -106,8 +105,8 @@ namespace ft
 					explicit vector(InputIterator it_start, InputIterator it_end, const allocator_type &alloc = allocator_type(),
 					typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL): _alloc(alloc)
 					{
-						if (this->_distance(it_start, it_end) <= 0 || this->_distance(it_start, it_end) >= this->max_size())
-							throw (std::length_error("ft::vector"));
+						if (this->_distance(it_start, it_end) > this->max_size())
+							throw (std::length_error("cannot create ft::vector larger than max_size()"));
 						// still has to be understood, then implemented
 						(void)it_start;
 						(void)it_end;
@@ -137,15 +136,15 @@ namespace ft
 					this->_size = src._size;
 					this->_capacity = src._capacity;
 					this->_alloc = src._alloc;
-					try
-					{
+					// try
+					// {
 						this->_array = _alloc.allocate(this->_capacity);
-					}
-					catch (std::exception &e)
-					{
-						std::cerr << "\033[31mAn error occured in the copy constructor while allocating your vector: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
-						throw (std::bad_alloc());
-					}
+					// }
+					// catch (std::exception &e)
+					// {
+					// 	std::cerr << "\033[31mAn error occured in the copy constructor while allocating your vector: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
+					// 	throw (std::bad_alloc());
+					// }
 					for (size_type i = 0; i < this->_size; ++i)
 						this->_alloc.construct(this->_array + i, src._array[i]);
 
@@ -168,8 +167,8 @@ namespace ft
 
 				void	resize(size_type n, value_type val = value_type())
 				{
-					if (n < 0 || n > this->max_size())
-						throw (std::length_error("ft::vector"));
+					if (n > this->max_size())
+						throw (std::length_error("cannot create ft::vector larger than max_size()"));
 					if (n < this->_size)
 						this->_size = n;
 					else if (n < (this->_capacity + this->_capacity))
@@ -178,17 +177,8 @@ namespace ft
 						// size_type tmp_cap = this->_capacity;
 						// try
 						// {
-							this->reserve((size_type)(this->_capacity + this->_capacity));
-						// }
-						// catch (std::exception &e)
-						// {
-						// 	std::cerr << "\033[31mWhile resizing your vector there was an exception: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
-						// 	throw (std::bad_alloc());
-						// }
-						// for (size_type i = 0; i < this->_size; ++i)
-						// 	this->_alloc.construct(this->_array + i, tmp[i]); // probably not needed, check it though
-
-						if (this->_array[this->_size] != val) // only needed to make val used
+						this->reserve((size_type)(this->_capacity + this->_capacity));
+						if (this->_array[this->_size] != val)
 						{
 							for (size_type i = this->_size; i < this->_capacity; ++i)
 								this->_alloc.construct(this->_array + i, val);
@@ -199,14 +189,12 @@ namespace ft
 						// try
 						// {
 							this->reserve(n);
-						// }
-						// catch (std::exception &e)
-						// {
-						// 	std::cerr << "\033[31mWhile resizing your vector there was an exception: " << e.what() << "\033[0m" << std::endl; // maybe remove those when finnishing up the project
-						// 	throw (std::bad_alloc());
-						// }
+							if (this->_array[this->_size] != val)
+							{
+								for (size_type i = this->_size; i < this->_capacity; ++i)
+									this->_alloc.construct(this->_array + i, val);
+							}
 					}
-
 					this->_size = n;
 				}
 
@@ -222,8 +210,8 @@ namespace ft
 
 				void	reserve(size_type n)
 				{
-					if(n > this->max_size())
-						throw (std::length_error("ft::vector"));
+					if (n > this->max_size())
+						throw (std::length_error("cannot create ft::vector larger than max_size()"));
 					else if (n <= this->_capacity)
 						return ;
 					pointer tmp = this->_array;
@@ -242,15 +230,15 @@ namespace ft
 					for (size_type i = 0; i < this->_size; ++i)
 						this->_alloc.construct(this->_array + i, tmp[i]);
 
-					for (size_type i = this->_size; i < this->_capacity; ++i) //maybe cut this out for optimization
+					for (size_type i = this->_size; i < this->_capacity; ++i)
 						this->_alloc.construct(this->_array + i, value_type());
 
-					for (size_type i = 0; i < this->_size; ++i)
+					for (size_type i = 0; i < tmp_cap; ++i)
 						this->_alloc.destroy(tmp + i);
 					this->_alloc.deallocate(tmp, tmp_cap);
 				}
 
-				// ##### Member functions for element access #####
+		// ##### Member functions for element access #####
 
 				reference		operator[](size_type pos)
 				{
@@ -296,11 +284,11 @@ namespace ft
 					return (this->_array[this->_size - 1]);
 				}
 
-				// ##### Member functions for Modifiers #####
+		// ##### Member functions for Modifiers #####
 
 				void	clear()
 				{
-					for (size_type i = 0; i < _size; ++i)
+					for (size_type i = 0; i < this->_capacity; ++i)
 						this->_alloc.destroy(this->_array + i);
 					this->_size = 0;
 				}
