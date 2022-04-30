@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:50:45 by tblaase           #+#    #+#             */
-/*   Updated: 2022/04/27 23:23:14 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/04/30 12:21:57 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,10 +212,6 @@ namespace ft
 						this->_size = n;
 					else if (n < (this->_capacity + this->_capacity))
 					{
-						// pointer tmp = this->_array;
-						// size_type tmp_cap = this->_capacity;
-						// try
-						// {
 						this->reserve((size_type)(this->_capacity + this->_capacity));
 						if (this->_array[this->_size] != val)
 						{
@@ -225,8 +221,6 @@ namespace ft
 					}
 					else
 					{
-						// try
-						// {
 							this->reserve(n);
 							if (this->_array[this->_size] != val)
 							{
@@ -324,6 +318,132 @@ namespace ft
 				}
 
 		// ##### Member functions for Modifiers #####
+
+				template <class InputIterator>
+					void assign (InputIterator first, InputIterator last, typename ft::enable_if<!is_integral<InputIterator>::value, bool>::type = true)
+					{
+						size_type diff = _distance(first, last);
+						if (diff > this->_capacity)
+						{
+							pointer tmp = this->_array;
+							size_type tmp_cap = this->_capacity;
+							this->_array = this->_alloc.allocate(diff); // if throws any exception, due to bad_alloc, or bad size, thats fine
+							for (size_type i = 0; i < this->_capacity; ++i)
+								this->_alloc.construct(this->_array + i, tmp[i]);
+
+							// for (size_type i = this->_size; i < this->_capacity; ++i) //maybe cut this out for optimization
+							// 	this->_alloc.construct(this->_array + i, value_type());
+
+							for (size_type i = 0; i < tmp_cap; ++i)
+								this->_alloc.destroy(tmp + i);
+							this->_alloc.deallocate(tmp, tmp_cap);
+
+							this->_capacity = diff;
+							this->_size = diff;
+
+						}
+						else
+						{
+							this->_size = diff;
+						}
+					}
+
+				void assign (size_type n, const value_type& val)
+				{
+					if (n > this->max_size())
+						throw (std::length_error("cannot create ft::vector larger than max_size()"));
+					if (n > this->_capacity)
+					{
+						pointer tmp = this->_array;
+						size_type tmp_cap = this->_capacity;
+						this->_array = this->_alloc.allocate(n);
+						for (size_type i = 0; i < n; ++i)
+							this->_alloc.construct(this->_array + i, val);
+
+						for (size_type i = 0; i < tmp_cap; ++i)
+							this->_alloc.destroy(tmp + i);
+						this->_alloc.deallocate(tmp, tmp_cap);
+
+						this->_capacity = n;
+						this->_size = n;
+					}
+					else
+					{
+						this->_size = n;
+						for (size_type i = 0; i < this->_size; ++i)
+						{
+							this->_alloc.destroy(this->_array + i);
+							this->_alloc.construct(this->_array + i, val);
+						}
+					}
+				}
+
+				void push_back (const value_type& val)
+				{
+					if (this->_size == this->_capacity)
+					{
+						this->resize(this->_size + 1);
+						this->_alloc.construct(this->_array + this->_size - 1, val);
+					}
+					else
+					{
+						this->_alloc.construct(this->_array + this->_size, val);
+						++this->_size;
+					}
+				}
+
+				void pop_back()
+				{
+					if (this->_size < this->_capacity)
+						this->_alloc.destroy(this->_array + this->_size);
+					--this->_size;
+				}
+
+				iterator insert (iterator position, const value_type& val)
+				{
+					size_type diff = _distance(this->begin(), position);
+					if (this->_size + 1 > this->_capacity)
+						this->resize(this->_size + 1);
+					else
+						++this->_size;
+					for (size_type i = this->_size; i > diff; --i)
+						this->_array[i] = this->_array[i - 1];
+					this->_array[diff] = val;
+					return (position);
+				}
+
+				void insert (iterator position, size_type n, const value_type& val)
+				{
+					size_type diff = _distance(this->begin(), position);
+					if (this->_size + n > this->_capacity)
+						this->resize(this->_size + n);
+					else
+						this->_size += n;
+					for (size_type i = this->_size - 1; i - n > diff; --i)
+						this->_array[i] = this->_array[i - n];
+					for (size_type i = 0; i < n; ++i)
+						this->_array[i + diff] = val;
+				}
+
+				template <class InputIterator>
+					void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!is_integral<InputIterator>::value, bool>::type = true)
+					{
+						size_type diff = _distance(this->begin(), position);
+						pointer tmp = this->_alloc.allocate(this->_capacity);
+						for (size_type i = 0; i < this->_capacity; ++i)
+							this->_alloc.construct(tmp + i, this->_array[i]);
+						size_type n = _distance(first, last);
+						if (this->_size + n > this->_capacity)
+							this->resize(this->_size + n);
+						else
+							this->_size += n;
+						for (size_type i = this->_size - 1; i - n > diff; --i)
+							this->_array[i] = this->_array[i - n];
+						for (size_type i = 0; i < n; ++i)
+							this->_alloc.construct(this->_array + (i + diff), tmp[i + diff]);
+							// this->_array[i + diff] = tmp[i + diff];
+
+					}
 
 				void	clear()
 				{
