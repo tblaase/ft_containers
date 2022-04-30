@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/24 12:02:50 by tblaase           #+#    #+#             */
-/*   Updated: 2022/04/25 18:36:23 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/04/29 11:39:19 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ namespace ft
 		struct iterator_traits<T*>
 		{
 			typedef T							value_type;
-			typedef value_type*					pointer;
-			typedef value_type&					reference;
+			typedef value_type					*pointer;
+			typedef value_type					&reference;
 			typedef ptrdiff_t					difference_type;
 			typedef random_access_iterator_tag	iterator_category;
 		};

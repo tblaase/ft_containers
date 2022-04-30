@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   random_access_iterator.hpp                                :+:      :+:    :+:   */
+/*   random_access_iterator.hpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/24 12:24:38 by tblaase           #+#    #+#             */
-/*   Updated: 2022/04/27 17:04:24 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/04/30 12:23:38 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,15 @@ namespace ft
 	class random_access_iterator
 	{
 		public:
-				typedef Iter												it_type;
-				typedef typename ft::iterator_traits<it_type>::value_type	value_type;
-				typedef typename ft::iterator_traits<it_type>::pointer		pointer;
-				typedef typename ft::iterator_traits<it_type>::reference	reference;
-				typedef typename ft::iterator_traits<it_type>::diff_type	diff_type;
-				typedef typename ft::iterator_traits<it_type>::it_category	it_category;
+				typedef Iter															iterator_type;
+				typedef typename ft::iterator_traits<iterator_type>::value_type			value_type;
+				typedef typename ft::iterator_traits<iterator_type>::pointer			pointer;
+				typedef typename ft::iterator_traits<iterator_type>::reference			reference;
+				typedef typename ft::iterator_traits<iterator_type>::difference_type	difference_type;
+				typedef typename ft::iterator_traits<iterator_type>::iterator_category	iterator_category;
 
 		private:
-				it_type _ptr;
+				iterator_type _ptr;
 
 		public:
 				random_access_iterator(): _ptr(NULL)
@@ -52,7 +52,7 @@ namespace ft
 						return (*this);
 					}
 
-				pointer	base()const
+				pointer	base() const
 				{
 					return (this->_ptr);
 				}
@@ -67,7 +67,7 @@ namespace ft
 					return (*this->_ptr);
 				}
 
-				reference	operator[](diff_type diff) const
+				reference	operator[](difference_type diff) const
 				{
 					return (this->_ptr + diff);
 				}
@@ -81,7 +81,7 @@ namespace ft
 
 				random_access_iterator	&operator++(int)
 				{
-					random_access_iterator tmp = *this;
+					static random_access_iterator tmp = *this;
 
 					++(*this);
 
@@ -97,31 +97,31 @@ namespace ft
 
 				random_access_iterator	&operator--(int)
 				{
-					random_access_iterator tmp = *this;
+					static random_access_iterator tmp = *this;
 
 					--(*this);
 
 					return (tmp);
 				}
 
-				random_access_iterator	operator+(diff_type diff)// maybe const is needed here
+				random_access_iterator	operator+(difference_type diff)// maybe const is needed here
 				{
 					return (random_access_iterator(_ptr + diff));
 				}
 
-				random_access_iterator	&operator+=(diff_type diff)
+				random_access_iterator	&operator+=(difference_type diff)
 				{
 					this->_ptr += diff;
 
 					return (*this);
 				}
 
-				random_access_iterator	operator-(diff_type diff)// maybe const is needed here
+				random_access_iterator	operator-(difference_type diff)// maybe const is needed here
 				{
 					return (random_access_iterator(_ptr - diff));
 				}
 
-				random_access_iterator	&operator-=(diff_type diff)
+				random_access_iterator	&operator-=(difference_type diff)
 				{
 					this->_ptr -= diff;
 
@@ -131,19 +131,19 @@ namespace ft
 
 	// non-member functions
 	template<class iter1, class iter2>
-		typename ft::random_access_iterator<iter1>::diff_type	operator+(const ft::random_access_iterator<iter1> &lhs, const ft::random_access_iterator<iter2> &rhs)
+		typename ft::random_access_iterator<iter1>::difference_type	operator+(const ft::random_access_iterator<iter1> &lhs, const ft::random_access_iterator<iter2> &rhs)
 		{
 			return (lhs.base() + rhs.base());
 		}
 
 	template<class iter1, class iter2>
-		typename ft::random_access_iterator<iter1>::diff_type	operator-(const ft::random_access_iterator<iter1> &lhs, const ft::random_access_iterator<iter2> &rhs)
+		typename ft::random_access_iterator<iter1>::difference_type	operator-(const ft::random_access_iterator<iter1> &lhs, const ft::random_access_iterator<iter2> &rhs)
 		{
 			return (lhs.base() - rhs.base());
 		}
 
 	template<class iter>
-		typename ft::random_access_iterator<iter>::diff_type	operator+(ft::random_access_iterator<iter> &iter1, typename ft::random_access_iterator<iter>::diff_type diff) // maybe -= is needed as well
+		typename ft::random_access_iterator<iter>::difference_type	operator+(ft::random_access_iterator<iter> &iter1, typename ft::random_access_iterator<iter>::difference_type diff) // maybe -= is needed as well
 		{
 			iter1 += diff;
 			return (iter1);
