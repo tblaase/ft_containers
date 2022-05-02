@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/24 12:24:38 by tblaase           #+#    #+#             */
-/*   Updated: 2022/04/30 12:23:38 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/01 01:22:40 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ namespace ft
 
 				reference	operator[](difference_type diff) const
 				{
-					return (this->_ptr + diff);
+					return (*(this->_ptr + diff));
 				}
 
 				random_access_iterator	&operator++()
