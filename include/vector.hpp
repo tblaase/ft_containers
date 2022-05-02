@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:50:45 by tblaase           #+#    #+#             */
-/*   Updated: 2022/04/30 12:21:57 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/01 01:31:04 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <memory>
-#include <vector>
+// #include <vector>
 
 #include "utils/random_access_iterator.hpp"
 #include "utils/utils.hpp"
@@ -47,6 +47,8 @@ namespace ft
 				template <class InputIterator>
 				size_type		_distance(InputIterator first, InputIterator last)
 				{
+					if (last < first)
+						throw(std::length_error("ft::vector::_M_Range_insert"));
 					size_type	res = 0;
 
 					while (first < last)
@@ -132,7 +134,11 @@ namespace ft
 				vector &operator=(const vector &src)
 				{
 					if (this->_capacity)
-						delete (this->_capacity);
+					{
+						for (size_type i = 0; i < this->_capacity; ++i)
+							this->_alloc.destroy(this->_array + i);
+						this->_alloc.deallocate(this->_array, this->_capacity);
+					}
 					this->_size = src._size;
 					this->_capacity = src._capacity;
 					this->_alloc = src._alloc;
@@ -304,7 +310,7 @@ namespace ft
 
 				const_reference front() const
 				{
-					return (this->array[0]);
+					return (this->_array[0]);
 				}
 
 				reference back()
@@ -322,29 +328,12 @@ namespace ft
 				template <class InputIterator>
 					void assign (InputIterator first, InputIterator last, typename ft::enable_if<!is_integral<InputIterator>::value, bool>::type = true)
 					{
-						size_type diff = _distance(first, last);
-						if (diff > this->_capacity)
+						this->resize(_distance(first, last));
+						for (size_type i = 0; i < this->_size; ++i)
 						{
-							pointer tmp = this->_array;
-							size_type tmp_cap = this->_capacity;
-							this->_array = this->_alloc.allocate(diff); // if throws any exception, due to bad_alloc, or bad size, thats fine
-							for (size_type i = 0; i < this->_capacity; ++i)
-								this->_alloc.construct(this->_array + i, tmp[i]);
-
-							// for (size_type i = this->_size; i < this->_capacity; ++i) //maybe cut this out for optimization
-							// 	this->_alloc.construct(this->_array + i, value_type());
-
-							for (size_type i = 0; i < tmp_cap; ++i)
-								this->_alloc.destroy(tmp + i);
-							this->_alloc.deallocate(tmp, tmp_cap);
-
-							this->_capacity = diff;
-							this->_size = diff;
-
-						}
-						else
-						{
-							this->_size = diff;
+							this->_alloc.destroy(this->_array + i);
+							this->_alloc.construct(this->_array + i, *(first));
+							++first;
 						}
 					}
 
@@ -429,21 +418,93 @@ namespace ft
 					void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!is_integral<InputIterator>::value, bool>::type = true)
 					{
 						size_type diff = _distance(this->begin(), position);
+						size_type n = _distance(first, last);
 						pointer tmp = this->_alloc.allocate(this->_capacity);
+						size_type tmp_cap = this->_capacity;
 						for (size_type i = 0; i < this->_capacity; ++i)
 							this->_alloc.construct(tmp + i, this->_array[i]);
-						size_type n = _distance(first, last);
 						if (this->_size + n > this->_capacity)
 							this->resize(this->_size + n);
 						else
 							this->_size += n;
-						for (size_type i = this->_size - 1; i - n > diff; --i)
-							this->_array[i] = this->_array[i - n];
-						for (size_type i = 0; i < n; ++i)
-							this->_alloc.construct(this->_array + (i + diff), tmp[i + diff]);
-							// this->_array[i + diff] = tmp[i + diff];
-
+						size_type i = 0;
+						size_type j = 0;
+						while(i < this->_size)
+						{
+							if (i >= diff && i < (n + diff))
+							{
+								this->_alloc.construct(this->_array + i, tmp[i - diff]);
+							}
+							else if (i >= (n + diff)) // double check this condition
+							{
+								this->_alloc.construct(this->_array + i, tmp[j]);
+								++j;
+							}
+							else
+								++j;
+							++i;
+						}
+						for (size_type i = 0; i < tmp_cap; ++i)
+							this->_alloc.destroy(tmp + i);
+						this->_alloc.deallocate(tmp, tmp_cap);
 					}
+
+				// the commented out lines would make it a better function, that makes more sense and would not create double values as the original does
+				iterator erase (iterator position)
+				{
+					size_type diff = _distance(this->begin(), position);
+
+					this->_alloc.destroy(this->_array + diff);
+					// if (diff + 1 < this->_size)
+					// {
+						for (size_type i = diff; i < this->_size - 1; ++i)
+						{
+							// if (i + 1 > this->_capacity)
+							// 	this->_alloc.construct(this->_array + i, value_type());
+							// else
+								this->_alloc.construct(this->_array + i, this->_array[i + 1]);
+							// ++i;
+						}
+					// }
+					// else
+					// 	this->_alloc.construct(this->_array + i, value_type());
+					--this->_size;
+					return (position);
+				}
+
+				// the commented out lines would make it a better function, that makes more sense and would not create double values as the original does
+				iterator erase (iterator first, iterator last)
+				{
+					size_type diff = _distance(this->begin(), first);
+					size_type n = _distance(first, last);
+					for (size_type i = diff; i < n; ++i)
+					{
+						this->_alloc.destroy(this->_array + i);
+						// if (i + n > this->_size)
+						// 	this->_alloc.construct(this->_array + i, value_type());
+					}
+					for (size_type i = diff + n; i < this->_size; ++i)
+					{
+						this->_alloc.construct(this->_array + (i - (diff + n)), this->_array[i]);
+					}
+					this->_size -= n;
+					return (first);
+				}
+
+				void swap (vector& x)
+				{
+					pointer tmp = this->_array;
+					size_type tmp_size = this->_size;
+					size_type tmp_cap = this->_capacity;
+
+					this->_array = x._array;
+					this->_size = x._size;
+					this->_capacity = x._capacity;
+
+					x._array = tmp;
+					x._size = tmp_size;
+					x._capacity = tmp_cap;
+				}
 
 				void	clear()
 				{
@@ -452,5 +513,61 @@ namespace ft
 					this->_size = 0;
 				}
 
+			// ##### Getter for the allocator #####
+
+				allocator_type get_allocator() const
+				{
+					return (this->_alloc);
+				}
 	};
+
+	// ##### Non member functions of the vector #####
+
+	// ##### Relational opperator overloads #####
+
+	// template< class T, class Alloc >
+	// 	bool	operator==(const ft::vector<T, Alloc>& lhs, const ft::vector<T, Alloc>& rhs)
+	// 	{
+	// 		if (lhs.size() != rhs.size())
+	// 			return (false);
+	// 		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	// 	}
+
+	template< class T, class Alloc >
+		bool	operator!=(const ft::vector<T, Alloc>& lhs, const ft::vector<T, Alloc>& rhs)
+		{
+			return (!(lhs == rhs));
+		}
+
+	// template< class T, class Alloc >
+	// 	bool	operator<(const ft::vector<T, Alloc>& lhs, const ft::vector<T, Alloc>& rhs)
+	// 	{
+	// 		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	// 	}
+
+	template< class T, class Alloc >
+		bool	operator<=(const ft::vector<T, Alloc>& lhs, const ft::vector<T, Alloc>& rhs)
+		{
+			return (!(rhs < lhs));
+		}
+
+	template< class T, class Alloc >
+		bool	operator>(const ft::vector<T, Alloc>& lhs, const ft::vector<T, Alloc>& rhs)
+		{
+			return (rhs < lhs);
+		}
+
+	template< class T, class Alloc >
+		bool	operator>=(const ft::vector<T, Alloc>& lhs, const ft::vector<T, Alloc>& rhs)
+		{
+			return (!(rhs > lhs));
+		}
+
+	// ##### functional template of the swap function #####
+
+	template<class T, class Alloc>
+		void	swap(vector<T, Alloc> &x, vector<T, Alloc> &y)
+		{
+			x.swap(y);
+		}
 }
