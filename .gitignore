@@ -68,3 +68,6 @@ dkms.conf
 
 # ignore .log
 *.log
+
+#ignore tester
+containers_test
