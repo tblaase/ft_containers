@@ -2,7 +2,11 @@ NAME		=	ft_containers
 
 CXX			=	c++
 
-CXXFLAGS	=	-Wall -Werror -Wextra -std=c++98
+CXXFLAGS	=	-std=c++98  -Wall -Wextra
+CXXFLAGS	+=	-Werror # disable for debugging/compiling on linux, clashes with -fpermissive
+CXXFLAGS	+=	-g # add this to get debug information
+CXXFLAGS	+=	-fsanitize=address # check for invalid addresses, disable for checking with valgrind
+# CXXFLAGS	+=	-fpermissive # only needed for debugging on linux
 
 #directories
 PWD			=	$(shell pwd)
