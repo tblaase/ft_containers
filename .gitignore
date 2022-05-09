@@ -71,3 +71,4 @@ dkms.conf
 
 #ignore tester
 containers_test
+tester_utils
