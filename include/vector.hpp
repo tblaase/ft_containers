@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:50:45 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/09 17:43:18 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/09 20:24:04 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,7 @@ namespace ft
 				// assignation operator overload
 				vector	&operator=(const vector &src)
 				{
-					if (this->_capacity) // can cause a leak of size 0 Bytes
+					if (this->_array != NULL)
 						this->_delete(this->_capacity);
 					this->_size = src._size;
 					this->_capacity = src._capacity;
