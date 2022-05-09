@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/09 17:29:24 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/09 17:47:59 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <vector>
 #include <map>
 #include <list>
+#include <stack>
 
 #include "../include/vector.hpp"
 
