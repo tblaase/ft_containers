@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/04/27 23:21:51 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/09 17:29:24 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 #include <sys/time.h>
 
 #include <vector>
-// #include <map>
+#include <map>
+#include <list>
 
 #include "../include/vector.hpp"
 
@@ -153,3 +154,100 @@ int main()
 	// system("leaks ft_containers");
 	return (0);
 }
+
+
+// #include "../include/tester_utils/base.hpp"
+
+// #define TESTED_NAMESPACE ft
+
+
+// #define T_SIZE_TYPE typename TESTED_NAMESPACE::vector<T>::size_type
+
+// template <typename T>
+// void	printSize(TESTED_NAMESPACE::vector<T> const &vct, bool print_content = true)
+// {
+// 	const T_SIZE_TYPE size = vct.size();
+// 	const T_SIZE_TYPE capacity = vct.capacity();
+// 	const std::string isCapacityOk = (capacity >= size) ? "OK" : "KO";
+// 	// Cannot limit capacity's max value because it's implementation dependent
+
+// 	std::cout << "size: " << size << std::endl;
+// 	std::cout << "capacity: " << isCapacityOk << std::endl;
+// 	std::cout << "max_size: " << vct.max_size() << std::endl;
+// 	if (print_content)
+// 	{
+// 		typename TESTED_NAMESPACE::vector<T>::const_iterator it = vct.begin();
+// 		typename TESTED_NAMESPACE::vector<T>::const_iterator ite = vct.end();
+// 		std::cout << std::endl << "Content is:" << std::endl;
+// 		for (; it != ite; ++it)
+// 			std::cout << "- " << *it << std::endl;
+// 	}
+// 	std::cout << "###############################################" << std::endl;
+// }
+
+// #define TESTED_TYPE int
+
+// void	is_empty(TESTED_NAMESPACE::vector<TESTED_TYPE> const &vct)
+// {
+// 	std::cout << "is_empty: " << vct.empty() << std::endl;
+// }
+
+// int		main(void)
+// {
+// 	const int start_size = 7;
+// 	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(start_size, 20);
+// 	std::vector<TESTED_TYPE> vct_std(start_size, 20);
+// 	TESTED_NAMESPACE::vector<TESTED_TYPE> vct2;
+// 	std::vector<TESTED_TYPE> vct2_std;
+// 	TESTED_NAMESPACE::vector<TESTED_TYPE>::iterator it = vct.begin();
+// 	std::vector<TESTED_TYPE>::iterator it_std = vct_std.begin();
+
+// 	for (int i = 2; i < start_size; ++i)
+// 	{
+// 		it[i] = (start_size - i) * 3;
+// 		it_std[i] = (start_size - i) * 3;
+// 	}
+// 	printSize(vct, true);
+
+// 	vct.resize(10, 42);
+// 	vct_std.resize(10, 42);
+// 	printSize(vct, true);
+
+// 	vct.resize(18, 43);
+// 	vct_std.resize(18, 43);
+// 	printSize(vct, true);
+// 	vct.resize(10);
+// 	vct_std.resize(10);
+// 	printSize(vct, true);
+// 	vct.resize(23, 44);
+// 	vct_std.resize(23, 44);
+// 	printSize(vct, true);
+// 	vct.resize(5);
+// 	vct_std.resize(5);
+// 	printSize(vct, true);
+// 	vct.reserve(5);
+// 	vct_std.reserve(5);
+// 	vct.reserve(3);
+// 	vct_std.reserve(3);
+// 	printSize(vct, true);
+// 	vct.resize(87);
+// 	vct_std.resize(87);
+// 	vct.resize(5);
+// 	vct_std.resize(5);
+// 	printSize(vct, true);
+
+// 	is_empty(vct2);
+// 	vct2 = vct;
+// 	vct2_std = vct_std;
+// 	is_empty(vct2);
+// 	vct.reserve(vct.capacity() + 1);
+// 	vct_std.reserve(vct_std.capacity() + 1);
+// 	printSize(vct, true);
+// 	printSize(vct2, true);
+
+// 	vct2.resize(0);
+// 	vct2_std.resize(0);
+// 	is_empty(vct2);
+// 	printSize(vct2, true);
+// 	return (0);
+// }
