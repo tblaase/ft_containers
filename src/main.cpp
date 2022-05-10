@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/09 21:00:23 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/10 11:27:01 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stack>
 #include <iostream>
 #include <cstdlib>
-// #include <chrono>
+// #include <chrono> // can be used instead of sys/time.h, but is not c++98 compliant
 
 #include <sys/time.h>
 
@@ -29,11 +29,12 @@
 
 #include "../include/vector.hpp"
 #include "../include/stack.hpp"
+// #include "../include/map.hpp"
 
 int main()
 {
-
-	long long test_val; // uncomment all the commented lines until line 56 to enable custom testing for the vector
+// # SET_TEST_START #
+	long long test_val; // uncomment all the commented lines until '# SET_TEST_END #' to enable custom testing for the vector
 	// std::cout << "test value: ";
 	// std::string test_str;
 	// std::getline(std::cin, test_str);
@@ -54,6 +55,7 @@ int main()
 	// 	resize_val = std::atoll(resize_str.c_str());
 
 	// std::cout << "resize value set: " << resize_val << std::endl;
+// # SET_TEST_END #
 
 	struct timeval start, end;
 	long seconds;
@@ -70,64 +72,83 @@ int main()
 
 	{
 		gettimeofday(&start, NULL);
-		// std::chrono::steady_clock::time_point ft_start = std::chrono::steady_clock::now();
-		TESTED_NAMESPACE::vector< int > *b;
+		// std::chrono::steady_clock::time_point end;
+		// std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+		TESTED_NAMESPACE::vector< int > *vct_1;
 		try
 		{
-			b = new TESTED_NAMESPACE::vector< int >(test_val);
+			std::cout << "creating vct_1 now with size " << test_val << std::endl;
+			vct_1 = new TESTED_NAMESPACE::vector< int >(test_val);
 		}
 		catch (std::exception &e)
 		{
-			std::cerr << "\texception caught!!!! " << e.what() << std::endl;
-			gettimeofday(&end, NULL);
-			// std::chrono::steady_clock::time_point ft_end = std::chrono::steady_clock::now();
-
-			seconds = (end.tv_sec - start.tv_sec);
-			microseconds = ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
-			#ifndef STD
-				std::cout << std::endl << "\tft::vector took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds" << std::endl;
-			#else
-				std::cout << std::endl << "\tstd::vector took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds" << std::endl;
-			#endif
-			// std::cout << std::endl << "\tft::vector took " << std::chrono::duration_cast<std::chrono::microseconds>(ft_end - ft_start).count() << " microseconds to run." << std::endl;
-			goto end;
+			std::cerr << "\tvct_1 exception caught!!!! " << e.what() << std::endl;
+			goto next_vct;
 		}
-		std::cout << "\tb size: " << b->size() << std::endl;
-		std::cout << "\tb capacity: " << b->capacity() << std::endl;
+		std::cout << "\tvct_1 size: " << vct_1->size() << std::endl;
+		std::cout << "\tvct_1 capacity: " << vct_1->capacity() << std::endl;
 		try
 		{
-			std::cout << "\tresizing b now" << std::endl;
-			b->resize(resize_val);
+			std::cout << "\tresizing vct_1 now" << std::endl;
+			vct_1->resize(resize_val);
 		}
 		catch (std::exception &e)
 		{
-			std::cerr << "\texception caught!!!! " << e.what() << std::endl;
+			std::cerr << "\tvct_1 exception caught!!!! " << e.what() << std::endl;
 		}
-		std::cout << "\tb size: " << b->size() << std::endl;
-		std::cout << "\tb capacity: " << b->capacity() << std::endl;
+		std::cout << "\tvct_1 size: " << vct_1->size() << std::endl;
+		std::cout << "\tvct_1 capacity: " << vct_1->capacity() << std::endl;
 
-		delete b;
+		std::cout << "deleting vct_1 now" << std::endl;
+
+		delete vct_1;
+
+		next_vct:
+		TESTED_NAMESPACE::vector<int> vct_2;
+		std::cout << "\tfilling vct_2 now:" << std::endl;
+		for (int i = 0; i < 100000000; ++i)
+		{
+			try
+			{
+				vct_2.push_back(i);
+			}
+			catch (std::exception &e)
+			{
+				std::cerr << "\tvct_2 exception caught!!!! " << e.what() << std::endl;
+				break ;
+			}
+		}
+			std::cout << "\tvct_2 size: " << vct_2.size() << std::endl;
+			std::cout << "\tvct_2 capacity: " << vct_2.capacity() << std::endl;
+
+		std::cout << "\terasing vct_2 now:" << std::endl;
+		vct_2.erase(vct_2.begin(), vct_2.end());;
+		std::cout << "\tvct_2 size: " << vct_2.size() << std::endl;
+		std::cout << "\tvct_2 capacity: " << vct_2.capacity() << std::endl;
+
 		gettimeofday(&end, NULL);
-		// std::chrono::steady_clock::time_point ft_end = std::chrono::steady_clock::now();
+		// end = std::chrono::steady_clock::now();
 
 		seconds = (end.tv_sec - start.tv_sec);
 		microseconds = ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
 		#ifndef STD
-			std::cout << std::endl << "\tft::vector took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds" << std::endl;
+			std::cout << std::endl << "##### ft::vector took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds #####" << std::endl;
+			// std::cout << std::endl << "\tft::vector took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " milliseconds to run." << std::endl;
 		#else
-			std::cout << std::endl << "\tstd::vector took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds" << std::endl;
+			std::cout << std::endl << "##### std::vector took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds #####" << std::endl;
+			// std::cout << std::endl << "\tstd::vector took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " milliseconds to run." << std::endl;
 		#endif
-		// std::cout << std::endl << "\tft::vector took " << std::chrono::duration_cast<std::chrono::milliseconds>(ft_end - ft_start).count() << " milliseconds to run." << std::endl;
 	}
 
 	std::cout << std::endl << "-------------------------------------------" << std::endl << std::endl;
 
-	end:
+// # LEAK_CHECK_START # //when checking, make sure fsanitize is disabled in the makefile CXXFLAGS
 	// #ifndef STD
 	// 	system("leaks ft_containers");
 	// #else
 	// 	system("leaks std_containers");
 	// #endif
+// # LEAK_CHECK_END #
 	return (0);
 }
 
