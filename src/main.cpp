@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/10 11:27:01 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/10 11:54:38 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ int main()
 
 	// // ##### Test of TESTED_NAMESPACE::vector #####
 	#ifndef STD
-		std::cout << "##### Test of my ft::vector #####" << std::endl;
+		std::cout << "#####Test of my ft::vector#####" << std::endl;
 	#else
-		std::cout << "##### Test of the std::vector #####" << std::endl;
+		std::cout << "#####Test of the std::vector#####" << std::endl;
 	#endif
 
 	{
@@ -77,7 +77,7 @@ int main()
 		TESTED_NAMESPACE::vector< int > *vct_1;
 		try
 		{
-			std::cout << "creating vct_1 now with size " << test_val << std::endl;
+			std::cout << "\tcreate vct_1 now with size " << test_val << std::endl;
 			vct_1 = new TESTED_NAMESPACE::vector< int >(test_val);
 		}
 		catch (std::exception &e)
@@ -89,7 +89,7 @@ int main()
 		std::cout << "\tvct_1 capacity: " << vct_1->capacity() << std::endl;
 		try
 		{
-			std::cout << "\tresizing vct_1 now" << std::endl;
+			std::cout << "\tresizing vct_1 now to " << resize_val << std::endl;
 			vct_1->resize(resize_val);
 		}
 		catch (std::exception &e)
@@ -99,13 +99,13 @@ int main()
 		std::cout << "\tvct_1 size: " << vct_1->size() << std::endl;
 		std::cout << "\tvct_1 capacity: " << vct_1->capacity() << std::endl;
 
-		std::cout << "deleting vct_1 now" << std::endl;
+		std::cout << "\tdeleting vct_1 now" << std::endl;
 
 		delete vct_1;
 
 		next_vct:
 		TESTED_NAMESPACE::vector<int> vct_2;
-		std::cout << "\tfilling vct_2 now:" << std::endl;
+		std::cout << "\n\tfilling vct_2 now" << std::endl;
 		for (int i = 0; i < 100000000; ++i)
 		{
 			try
@@ -121,7 +121,7 @@ int main()
 			std::cout << "\tvct_2 size: " << vct_2.size() << std::endl;
 			std::cout << "\tvct_2 capacity: " << vct_2.capacity() << std::endl;
 
-		std::cout << "\terasing vct_2 now:" << std::endl;
+		std::cout << "\terasing vct_2 now" << std::endl;
 		vct_2.erase(vct_2.begin(), vct_2.end());;
 		std::cout << "\tvct_2 size: " << vct_2.size() << std::endl;
 		std::cout << "\tvct_2 capacity: " << vct_2.capacity() << std::endl;
@@ -132,10 +132,10 @@ int main()
 		seconds = (end.tv_sec - start.tv_sec);
 		microseconds = ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
 		#ifndef STD
-			std::cout << std::endl << "##### ft::vector took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds #####" << std::endl;
+			std::cout << std::endl << "#####ft::vector took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds#####" << std::endl;
 			// std::cout << std::endl << "\tft::vector took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " milliseconds to run." << std::endl;
 		#else
-			std::cout << std::endl << "##### std::vector took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds #####" << std::endl;
+			std::cout << std::endl << "#####std::vector took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds#####" << std::endl;
 			// std::cout << std::endl << "\tstd::vector took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " milliseconds to run." << std::endl;
 		#endif
 	}
