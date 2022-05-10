@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 08:20:09 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/10 09:16:00 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/10 18:07:05 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 #include "utils/algorithm.hpp"
 #include "utils/reverse_iterator.hpp"
 #include "utils/utils.hpp"
-// #include "utils/bidirectional_iterator.hpp"
-// #include "utils/tree.hpp"
+#include "utils/bidirectional_iterator.hpp"
+#include "utils/avl_tree.hpp"
 
 namespace ft
 {
@@ -31,20 +31,19 @@ namespace ft
 				// typedefs
 				typedef Key																key_type;
 				typedef T																mapped_type;
+				typedef ft::pair<const key_type, mapped_type>							value_type;
 				typedef Compare															key_compare;
 				typedef Allocator														allocator_type;
-				typedef typename allocator_type::value_type								value_type;
 				typedef typename allocator_type::reference								reference;
 				typedef typename allocator_type::const_reference						const_reference;
 				typedef typename allocator_type::pointer								pointer;
 				typedef typename allocator_type::const_pointer							const_pointer;
 				typedef typename allocator_type::size_type								size_type;
 				typedef typename allocator_type::difference_type						difference_type;
-				// typedef ft::bidirectional_iterator<Node<value_type> >					iterator; // comes from bidirectional_iterator.hpp
-				// typedef ft::const_bidirectional_iterator<Node<value_type> >				iterator; // comes from bidirectional_iterator.hpp
-				// typedef ft::reverse_iterator<iterator>									reverse_iterator; // comes from bidirectional_iterator.hpp
-				// typedef ft::reverse_iterator<const_iterator>							const_reverse_iterator; // comes from bidirectional_iterator.hpp
-				// typedef typename Allocator::template rebind<Node<value_type> >::other	node_allocator; // comes from tree.hpp
+				// typedef ft::bidirectional_iterator<Key, T, Compare, Node, false>		iterator; // maybe rethink the use of the bool and use an overload instead
+				// typedef ft::bidirectional_iterator<Key, T, Compare, Node, true>			const_iterator; // maybe rethink the use of the bool and use an overload instead
+				// typedef ft::rev_bidirectional_iterator<Key, T, Compare, Node, false>	reverse_iterator; // not implemented yet
+				// typedef ft::rev_bidirectional_iterator<Key, T, Compare, Node, true>		const_reverse_iterator; // not implemented yet
 
 				class value_compare: public binary_function<value_type, value_type, bool>
 				{
@@ -61,15 +60,13 @@ namespace ft
 						}
 				};
 
-				// typedef tree<Key, value_type, value_compare>	tree; // comes from tree.hpp
-				// typedef Node<value_type>*						node_ptr; // comes from tree.hpp
-				// typedef Node<value_type>						node; // comes from tree.hpp
-
 			private:
-				// tree			_tree;
-				key_compare		_cmp;
-				allocator_type	_alloc;
-				// node_allocator	_max_size_alloc;
+				Node*					_root; // Pointer to the first element of the tree (root)
+				Node*					_lastElem; // Pointer to the last elem of the tree
+				size_type				_size; // Number of T values inside the map
+				allocator_type			_allocPair; // Copy of allocator_type object
+				key_compare				_comp; // Copy of comp key_compare predicate
+				ft::allocator<Node>		_allocNode; // Node's allocator
 
 			public:
 				// empty constructor
