@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/24 12:24:38 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/09 17:35:51 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/10 09:22:09 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ namespace ft
 					return (tmp);
 				}
 
-				random_access_iterator	operator+(difference_type diff)// maybe const is needed here
+				random_access_iterator	operator+(difference_type diff)
 				{
 					return (random_access_iterator(_ptr + diff));
 				}
@@ -118,7 +118,7 @@ namespace ft
 					return (*this);
 				}
 
-				random_access_iterator	operator-(difference_type diff)// maybe const is needed here
+				random_access_iterator	operator-(difference_type diff)
 				{
 					return (random_access_iterator(_ptr - diff));
 				}
