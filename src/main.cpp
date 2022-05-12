@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/12 12:15:57 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/12 14:40:46 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,14 +168,14 @@ int main()
 
 		std::cout << "\tst_1 size: " << st_1.size() << std::endl;
 
-		std::cout << "\tfill with " << test_val << "elements" << std::endl;
+		std::cout << "\tfill with " << test_val << " elements" << std::endl;
 		for (size_t i = 0; i < test_val; i++)
 			st_1.push(i + 42);
 
 		std::cout << "\tst_1 size: " << st_1.size() << std::endl;
 
 		std::cout << "\tpopping all elements" << std::endl;
-		for (size_t i = 0; i < st_1.size(); i++)
+		for (size_t i = 0; i < test_val; i++)
 			st_1.pop();
 
 		std::cout << "\tst_1 size: " << st_1.size() << std::endl << std::endl;
@@ -279,81 +279,47 @@ int main()
 
 
 // #include "../include/tester_utils/base.hpp"
+// #include "../include/tester_utils/common.hpp"
 
-// // #define TESTED_NAMESPACE ft
+// #include <list>
 
+// #define T1 char
+// #define T2 int
+// typedef _pair<const T1, T2> T3;
 
-// #define T_SIZE_TYPE typename TESTED_NAMESPACE::vector<T>::size_type
-
-// template <typename T>
-// void	printSize(TESTED_NAMESPACE::vector<T> const &vct, bool print_content = true)
+// template <class T>
+// void	is_empty(T const &mp)
 // {
-// 	const T_SIZE_TYPE size = vct.size();
-// 	const T_SIZE_TYPE capacity = vct.capacity();
-// 	const std::string isCapacityOk = (capacity >= size) ? "OK" : "KO";
-// 	// Cannot limit capacity's max value because it's implementation dependent
-
-// 	std::cout << "size: " << size << std::endl;
-// 	std::cout << "capacity: " << isCapacityOk << std::endl;
-// 	std::cout << "max_size: " << vct.max_size() << std::endl;
-// 	if (print_content)
-// 	{
-// 		typename TESTED_NAMESPACE::vector<T>::const_iterator it = vct.begin();
-// 		typename TESTED_NAMESPACE::vector<T>::const_iterator ite = vct.end();
-// 		std::cout << std::endl << "Content is:" << std::endl;
-// 		for (; it != ite; ++it)
-// 			std::cout << "- " << *it << std::endl;
-// 	}
-// 	std::cout << "###########################################" << std::endl;
-// }
-
-// #define TESTED_TYPE int
-
-// void	is_empty(TESTED_NAMESPACE::vector<TESTED_TYPE> const &vct)
-// {
-// 	std::cout << "is_empty: " << vct.empty() << std::endl;
+// 	std::cout << "is_empty: " << mp.empty() << std::endl;
 // }
 
 // int		main(void)
 // {
-// 	const int start_size = 7;
-// 	TESTED_NAMESPACE::vector<TESTED_TYPE> vct(start_size, 20);
-// 	TESTED_NAMESPACE::vector<TESTED_TYPE>::iterator it = vct.begin();
+// 	std::list<T3> lst;
+// 	unsigned int lst_size = 7;
+// 	for (unsigned int i = 0; i < lst_size; ++i)
+// 		lst.push_back(T3('a' + i, lst_size - i));
 
-// 	for (int i = 2; i < start_size; ++i)
-// 	{
-// 		it[i] = (start_size - i) * 3;
-// 	}
-// 	printSize(vct, true);
+// 	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end()), mp2;
+// 	TESTED_NAMESPACE::map<T1, T2>::iterator it;
 
-// 	vct.resize(10, 42);
-// 	printSize(vct, true);
+// 	lst.clear();
+// 	is_empty(mp);
+// 	printSize(mp);
 
-// 	vct.resize(18, 43);
-// 	printSize(vct, true);
-// 	vct.resize(10);
-// 	printSize(vct, true);
-// 	vct.resize(23, 44);
-// 	printSize(vct, true);
-// 	vct.resize(5);
-// 	printSize(vct, true);
-// 	vct.reserve(5);
-// 	vct.reserve(3);
-// 	printSize(vct, true);
-// 	vct.resize(87);
-// 	vct.resize(5);
-// 	printSize(vct, true);
+// 	is_empty(mp2);
+// 	mp2 = mp;
+// 	is_empty(mp2);
 
-// 	TESTED_NAMESPACE::vector<TESTED_TYPE> vct2;
-// 	// is_empty(vct2);
-// 	// vct2 = vct;
-// 	is_empty(vct2);
-// 	vct.reserve(vct.capacity() + 1);
-// 	printSize(vct, true);
-// 	printSize(vct2, true);
+// 	it = mp.begin();
+// 	for (unsigned long int i = 3; i < mp.size(); ++i)
+// 		it++->second = i * 7;
 
-// 	vct2.resize(0);
-// 	is_empty(vct2);
-// 	printSize(vct2, true);
+// 	printSize(mp);
+// 	printSize(mp2);
+
+// 	mp2.clear();
+// 	is_empty(mp2);
+// 	printSize(mp2);
 // 	return (0);
 // }
