@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/12 14:40:46 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/12 15:11:44 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,18 +237,18 @@ int main()
 		// std::chrono::steady_clock::time_point end;
 		// std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
-		// TESTED_NAMESPACE::map<int, int> *_map = new TESTED_NAMESPACE::map<int, int>;
-		// // float progress = 0;
-		// for (size_t i = 0; i < test_val; ++i)
-		// {
-		// 	_map->insert(TESTED_NAMESPACE::make_pair<int, int>(i, i));
-		// }
-		// // std::cout << std::endl << "showing the created tree now inorder" << std::endl;
-		// // avl.inorder(avl._root);
-		// // std::cout << "\nsize: " << avl->size() << std::endl;
-		// // avl.destroy_tree_from(avl._root);
-		// delete _map;
-		// _map = NULL;
+		TESTED_NAMESPACE::map<int, int> *map_1 = new TESTED_NAMESPACE::map<int, int>;
+		std::cout << "inserting " << test_val / 10 << " elements" << std::endl;
+		for (size_t i = 0; i < test_val / 10; ++i)
+		{
+			map_1->insert(TESTED_NAMESPACE::make_pair(i, i));
+		}
+		std::cout << "map size: " << map_1->size() << std::endl;
+		std::cout << "clearing map" << std::endl;
+		map_1->clear();
+		std::cout << "map size: " << map_1->size();
+		delete map_1;
+		map_1 = NULL;
 		gettimeofday(&end, NULL);
 		// end = std::chrono::steady_clock::now();
 
