@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:50:45 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/12 09:49:56 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/12 12:22:27 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ namespace ft
 				typedef typename allocator_type::const_pointer		const_pointer;
 				typedef random_access_iterator<pointer>				iterator;
 				typedef random_access_iterator<const_pointer>		const_iterator;
-				typedef reverse_iterator<const_iterator>			const_reverse_iterator;
-				typedef reverse_iterator<iterator>					reverse_iterator;
+				typedef rev_random_access_iterator<const_iterator>	const_reverse_iterator;
+				typedef rev_random_access_iterator<iterator>		reverse_iterator;
 		private:
 				pointer			_array;
 				size_type		_size;

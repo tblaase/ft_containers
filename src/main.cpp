@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/12 12:13:31 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/12 12:15:57 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,12 @@
 #include <map>
 #include <list>
 #include <stack>
-#endif
-
+#else
 #include "../include/vector.hpp"
 #include "../include/stack.hpp"
 #include "../include/map.hpp"
+#endif
+
 
 int main()
 {

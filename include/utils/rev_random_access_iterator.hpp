@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   reverse_iterator.hpp                               :+:      :+:    :+:   */
+/*   rev_random_access_iterator.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -18,7 +18,7 @@
 namespace ft
 {
 	template <class Iter>
-	class reverse_iterator
+	class rev_random_access_iterator
 		: public iterator <	typename iterator_traits<Iter>::iterator_category,
 							typename iterator_traits<Iter>::value_type,
 							typename iterator_traits<Iter>::difference_type,
@@ -34,27 +34,27 @@ namespace ft
 			iterator_type	_current;
 		public:
 			// default constructor
-			reverse_iterator(): _current()
+			rev_random_access_iterator(): _current()
 			{}
 
 			// constructor
-			explicit reverse_iterator(iterator_type x): _current(x)
+			explicit rev_random_access_iterator(iterator_type x): _current(x)
 			{}
 
 			// copy costructor
 			template <class It>
-				reverse_iterator(const reverse_iterator<It> &src)
+				rev_random_access_iterator(const rev_random_access_iterator<It> &src)
 				{
 					*this = src;
 				}
 
 			// destructor
-			~reverse_iterator()
+			~rev_random_access_iterator()
 			{}
 
 			// assigation operator overload
 			template <class It>
-				reverse_iterator	&operator=(const reverse_iterator<It>& other)
+				rev_random_access_iterator	&operator=(const rev_random_access_iterator<It>& other)
 				{
 					this->_current = other.base();
 					return (*this);
@@ -77,51 +77,51 @@ namespace ft
 				return (&(this->operator*()));
 			}
 
-			reverse_iterator	&operator++()
+			rev_random_access_iterator	&operator++()
 			{
 				--this->_current;
 				return (*this);
 			}
 
-			reverse_iterator	operator++(int)
+			rev_random_access_iterator	operator++(int)
 			{
-				reverse_iterator	tmp(*this);
+				rev_random_access_iterator	tmp(*this);
 
 				--this->_current;
 				return (tmp);
 			}
 
-			reverse_iterator	&operator--()
+			rev_random_access_iterator	&operator--()
 			{
 				++this->_current;
 				return (*this);
 			}
 
-			reverse_iterator	operator--(int)
+			rev_random_access_iterator	operator--(int)
 			{
-				reverse_iterator	tmp(*this);
+				rev_random_access_iterator	tmp(*this);
 
 				++this->_current;
 				return (tmp);
 			}
 
-			reverse_iterator	operator+(difference_type n)
+			rev_random_access_iterator	operator+(difference_type n)
 			{
-				return (reverse_iterator(this->_current - n));
+				return (rev_random_access_iterator(this->_current - n));
 			}
 
-			reverse_iterator	&operator+=(difference_type n)
+			rev_random_access_iterator	&operator+=(difference_type n)
 			{
 				this->_current -= n;
 				return (*this);
 			}
 
-			reverse_iterator	operator-(difference_type n)
+			rev_random_access_iterator	operator-(difference_type n)
 			{
-				return (reverse_iterator(this->_current + n));
+				return (rev_random_access_iterator(this->_current + n));
 			}
 
-			reverse_iterator	&operator-=(difference_type n)
+			rev_random_access_iterator	&operator-=(difference_type n)
 			{
 				this->_current += n;
 				return (*this);
@@ -135,50 +135,50 @@ namespace ft
 
 	// ##### Non member functions of the reverse iterator #####
 	template <class Iter1, class Iter2>
-		bool operator==(const ft::reverse_iterator<Iter1> &x, const ft::reverse_iterator<Iter2> &y)
+		bool operator==(const ft::rev_random_access_iterator<Iter1> &x, const ft::rev_random_access_iterator<Iter2> &y)
 		{
 			return (x.base() == y.base());
 		}
 
 	template <class Iter1, class Iter2>
-		bool operator<(const ft::reverse_iterator<Iter1> &x, const ft::reverse_iterator<Iter2> &y)
+		bool operator<(const ft::rev_random_access_iterator<Iter1> &x, const ft::rev_random_access_iterator<Iter2> &y)
 		{
 			return (x.base() > y.base());
 		}
 
 	template <class Iter1, class Iter2>
-		bool operator!=(const ft::reverse_iterator<Iter1> &x, const ft::reverse_iterator<Iter2> &y)
+		bool operator!=(const ft::rev_random_access_iterator<Iter1> &x, const ft::rev_random_access_iterator<Iter2> &y)
 		{
 			return (x.base() != y.base());
 		}
 
 	template <class Iter1, class Iter2>
-		bool operator>(const ft::reverse_iterator<Iter1> &x, const ft::reverse_iterator<Iter2> &y)
+		bool operator>(const ft::rev_random_access_iterator<Iter1> &x, const ft::rev_random_access_iterator<Iter2> &y)
 		{
 			return (x.base() < y.base());
 		}
 
 	template <class Iter1, class Iter2>
-		bool operator>=(const ft::reverse_iterator<Iter1> &x, const ft::reverse_iterator<Iter2> &y)
+		bool operator>=(const ft::rev_random_access_iterator<Iter1> &x, const ft::rev_random_access_iterator<Iter2> &y)
 		{
 			return (x.base() <= y.base());
 		}
 
 	template <class Iter1, class Iter2>
-		bool operator<=(const ft::reverse_iterator<Iter1> &x, const ft::reverse_iterator<Iter2> &y)
+		bool operator<=(const ft::rev_random_access_iterator<Iter1> &x, const ft::rev_random_access_iterator<Iter2> &y)
 		{
 			return (x.base() >= y.base());
 		}
 
 	template <class Iter1, class Iter2>
-		typename ft::reverse_iterator<Iter1>::difference_type operator-(const ft::reverse_iterator<Iter1> &x, const ft::reverse_iterator<Iter2> &y)
+		typename ft::rev_random_access_iterator<Iter1>::difference_type operator-(const ft::rev_random_access_iterator<Iter1> &x, const ft::rev_random_access_iterator<Iter2> &y)
 		{
 			return (y.base() - x.base());
 		}
 
 	template <class Iter1>
-		ft::reverse_iterator<Iter1> operator+(typename ft::reverse_iterator<Iter1>::difference_type n, const ft::reverse_iterator<Iter1> &x)
+		ft::rev_random_access_iterator<Iter1> operator+(typename ft::rev_random_access_iterator<Iter1>::difference_type n, const ft::rev_random_access_iterator<Iter1> &x)
 		{
-			return (ft::reverse_iterator<Iter1>(x.base() - n));
+			return (ft::rev_random_access_iterator<Iter1>(x.base() - n));
 		}
 }
