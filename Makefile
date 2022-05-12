@@ -5,9 +5,11 @@ CXX			=	c++
 
 CXXFLAGS	=	-std=c++98  -Wall -Wextra
 CXXFLAGS	+=	-Werror # disable for debugging/compiling on linux, clashes with -fpermissive
+
 # CXXFLAGS	+=	-g # add this to get debug information
 # CXXFLAGS	+=	-fsanitize=address # check for invalid addresses, disable for checking with valgrind
 # CXXFLAGS	+=	-fpermissive # only needed for compiling on linux
+# CXXFLAGS	+=	-D LEAK # enable to check for leaks with leaks command for each container
 
 #directories
 PWD			=	$(shell pwd)

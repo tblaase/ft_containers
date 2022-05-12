@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/12 11:00:58 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/12 11:09:48 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int main()
 	long seconds;
 	long microseconds;
 
-	std::cout << std::endl << "-------------------------------------------" << std::endl << std::endl;
+	std::cout << std::endl << "----------------------------------------" << std::endl << std::endl;
 
 	{
 		// ##### Test of TESTED_NAMESPACE::vector #####
@@ -131,22 +131,24 @@ int main()
 		seconds = (end.tv_sec - start.tv_sec);
 		microseconds = ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
 		#ifndef STD
-			std::cout << std::endl << "#####ft::vector took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds#####" << std::endl;
+			std::cout << std::endl << "#####ft::vector: " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds#####" << std::endl;
 			// std::cout << std::endl << "\tft::vector took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " milliseconds to run." << std::endl;
 		#else
-			std::cout << std::endl << "#####std::vector took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds#####" << std::endl;
+			std::cout << std::endl << "#####std::vector: " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds#####" << std::endl;
 			// std::cout << std::endl << "\tstd::vector took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " milliseconds to run." << std::endl;
 		#endif
 	// # LEAK_CHECK_START # //when checking, make sure fsanitize is disabled in the makefile CXXFLAGS
-		// #ifndef STD
-		// 	system("leaks ft_containers");
-		// #else
-		// 	system("leaks std_containers");
-		// #endif
+		#ifdef LEAK
+			#ifndef STD
+				system("leaks ft_containers");
+			#else
+				system("leaks std_containers");
+			#endif
+		#endif
 	// # LEAK_CHECK_END #
 	}
 
-	std::cout << std::endl << "-------------------------------------------" << std::endl << std::endl;
+	std::cout << std::endl << "----------------------------------------" << std::endl << std::endl;
 
 	{
 		// ##### Test of TESTED_NAMESPACE::stack #####
@@ -167,22 +169,24 @@ int main()
 		seconds = (end.tv_sec - start.tv_sec);
 		microseconds = ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
 		#ifndef STD
-			std::cout << std::endl << "#####ft::map took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds#####" << std::endl;
+			std::cout << std::endl << "#####ft::stack: " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds#####" << std::endl;
 			// std::cout << std::endl << "\tft::vector took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " milliseconds to run." << std::endl;
 		#else
-			std::cout << std::endl << "#####std::map took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds#####" << std::endl;
+			std::cout << std::endl << "#####std::stack: " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds#####" << std::endl;
 			// std::cout << std::endl << "\tstd::vector took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " milliseconds to run." << std::endl;
 		#endif
 	// # LEAK_CHECK_START # //when checking, make sure fsanitize is disabled in the makefile CXXFLAGS
-		// #ifndef STD
-		// 	system("leaks ft_containers");
-		// #else
-		// 	system("leaks std_containers");
-		// #endif
+		#ifdef LEAK
+			#ifndef STD
+				system("leaks ft_containers");
+			#else
+				system("leaks std_containers");
+			#endif
+		#endif
 	// # LEAK_CHECK_END #
 	}
 
-	std::cout << std::endl << "-------------------------------------------" << std::endl << std::endl;
+	std::cout << std::endl << "----------------------------------------" << std::endl << std::endl;
 
 	{
 		// ##### Test of TESTED_NAMESPACE::map #####
@@ -213,22 +217,24 @@ int main()
 		seconds = (end.tv_sec - start.tv_sec);
 		microseconds = ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
 		#ifndef STD
-			std::cout << std::endl << "#####ft::map took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds#####" << std::endl;
+			std::cout << std::endl << "#####ft::map: " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds#####" << std::endl;
 			// std::cout << std::endl << "\tft::vector took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " milliseconds to run." << std::endl;
 		#else
-			std::cout << std::endl << "#####std::map took " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds#####" << std::endl;
+			std::cout << std::endl << "#####std::map: " << (microseconds / 1000000) << "," << (microseconds % 1000000) << " seconds#####" << std::endl;
 			// std::cout << std::endl << "\tstd::vector took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " milliseconds to run." << std::endl;
 		#endif
 	// # LEAK_CHECK_START # //when checking, make sure fsanitize is disabled in the makefile CXXFLAGS
-		// #ifndef STD
-		// 	system("leaks ft_containers");
-		// #else
-		// 	system("leaks std_containers");
-		// #endif
+		#ifdef LEAK
+			#ifndef STD
+				system("leaks ft_containers");
+			#else
+				system("leaks std_containers");
+			#endif
+		#endif
 	// # LEAK_CHECK_END #
 	}
 
-	std::cout << std::endl << "-------------------------------------------" << std::endl << std::endl;
+	std::cout << std::endl << "----------------------------------------" << std::endl << std::endl;
 
 	return (0);
 }
