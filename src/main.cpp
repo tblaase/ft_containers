@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/12 11:09:48 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/12 12:13:31 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 int main()
 {
 // # SET_TEST_START #
-	long long test_val; // uncomment all the commented lines until '# SET_TEST_END #' to enable custom testing for the vector
+	size_t test_val; // uncomment all the commented lines until '# SET_TEST_END #' to enable custom testing for the vector
 	// std::cout << "test value: ";
 	// std::string test_str;
 	// std::getline(std::cin, test_str);
@@ -45,11 +45,11 @@ int main()
 	// std::cout << "test value set: " << test_val << std::endl;
 
 	// std::cout << "resize value: ";
-	long long resize_val;
+	size_t resize_val;
 	// std::string resize_str;
 	// std::getline(std::cin, resize_str);
 	// if (resize_str.length() == 0)
-		resize_val = 50000001;
+		resize_val = 0;
 	// else
 	// 	resize_val = std::atoll(resize_str.c_str());
 
@@ -101,11 +101,12 @@ int main()
 		std::cout << "\tdeleting vct_1 now" << std::endl;
 
 		delete vct_1;
+		vct_1 = NULL;
 
 		next_vct:
 		TESTED_NAMESPACE::vector<int> vct_2;
 		std::cout << "\n\tfilling vct_2 now" << std::endl;
-		for (int i = 0; i < 100000000; ++i)
+		for (size_t i = 0; i < test_val * 2; ++i)
 		{
 			try
 			{
@@ -140,9 +141,9 @@ int main()
 	// # LEAK_CHECK_START # //when checking, make sure fsanitize is disabled in the makefile CXXFLAGS
 		#ifdef LEAK
 			#ifndef STD
-				system("leaks ft_containers");
+				system("leaks ft_containers | tail -3");
 			#else
-				system("leaks std_containers");
+				system("leaks std_containers | tail -3");
 			#endif
 		#endif
 	// # LEAK_CHECK_END #
@@ -161,7 +162,42 @@ int main()
 		// std::chrono::steady_clock::time_point end;
 		// std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
-		// INSERT_TEST_HERE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		std::cout << "\tcreate st_1" << std::endl;
+		TESTED_NAMESPACE::stack<int>st_1;
+
+		std::cout << "\tst_1 size: " << st_1.size() << std::endl;
+
+		std::cout << "\tfill with " << test_val << "elements" << std::endl;
+		for (size_t i = 0; i < test_val; i++)
+			st_1.push(i + 42);
+
+		std::cout << "\tst_1 size: " << st_1.size() << std::endl;
+
+		std::cout << "\tpopping all elements" << std::endl;
+		for (size_t i = 0; i < st_1.size(); i++)
+			st_1.pop();
+
+		std::cout << "\tst_1 size: " << st_1.size() << std::endl << std::endl;
+
+		std::cout << "\tcreate st_2" << std::endl;
+		TESTED_NAMESPACE::stack<int> *st_2 = new TESTED_NAMESPACE::stack<int>;
+
+		std::cout << "\tst_2 size: " << st_2->size() << std::endl;
+
+		std::cout << "\tfill with " << test_val * 2 << "elements" << std::endl;
+		for (size_t i = 0; i < test_val * 2 ; i++)
+			st_2->push(i + 42);
+
+		std::cout << "\tst_2 size: " << st_2->size() << std::endl;
+
+		std::cout << "\tpopping half of the elements" << std::endl;
+		for (size_t i = 0; i < test_val; i++)
+			st_2->pop();
+
+		std::cout << "\tst_2 size: " << st_2->size() << std::endl;
+		std::cout << "\tremaining elements should be handled by the destructor" << std::endl;
+		delete st_2;
+		st_2 = NULL;
 
 		gettimeofday(&end, NULL);
 		// end = std::chrono::steady_clock::now();
@@ -178,9 +214,9 @@ int main()
 	// # LEAK_CHECK_START # //when checking, make sure fsanitize is disabled in the makefile CXXFLAGS
 		#ifdef LEAK
 			#ifndef STD
-				system("leaks ft_containers");
+				system("leaks ft_containers | tail -3");
 			#else
-				system("leaks std_containers");
+				system("leaks std_containers | tail -3");
 			#endif
 		#endif
 	// # LEAK_CHECK_END #
@@ -211,6 +247,7 @@ int main()
 		// // std::cout << "\nsize: " << avl->size() << std::endl;
 		// // avl.destroy_tree_from(avl._root);
 		// delete _map;
+		// _map = NULL;
 		gettimeofday(&end, NULL);
 		// end = std::chrono::steady_clock::now();
 
@@ -226,9 +263,9 @@ int main()
 	// # LEAK_CHECK_START # //when checking, make sure fsanitize is disabled in the makefile CXXFLAGS
 		#ifdef LEAK
 			#ifndef STD
-				system("leaks ft_containers");
+				system("leaks ft_containers | tail -3");
 			#else
-				system("leaks std_containers");
+				system("leaks std_containers | tail -3");
 			#endif
 		#endif
 	// # LEAK_CHECK_END #
