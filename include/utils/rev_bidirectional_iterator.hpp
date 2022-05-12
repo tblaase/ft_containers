@@ -1,22 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bidirectional_iterator.hpp                         :+:      :+:    :+:   */
+/*   rev_bidirectional_iterator.hpp                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/10 09:18:14 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/12 10:09:10 by tblaase          ###   ########.fr       */
+/*   Created: 2022/05/12 09:47:26 by tblaase           #+#    #+#             */
+/*   Updated: 2022/05/12 10:09:13 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-# include "iterator.hpp"
+#include "iterator.hpp"
+
 namespace ft
 {
 	template <class T, class NodePtr>
-		class bidirectional_iterator
+		class rev_bidirectional_iterator
 		{
 			public:
 				typedef T												iterator_type;
@@ -26,18 +27,19 @@ namespace ft
 				typedef typename iterator_traits<T>::reference			reference;
 				typedef typename iterator_traits<T>::pointer			pointer;
 				typedef NodePtr											node_pointer;
+
 			private:
 				node_pointer	_it;
 
 			public:
-				bidirectional_iterator() : _it()
+				rev_bidirectional_iterator() : _it()
 				{};
 
-				explicit	bidirectional_iterator(node_pointer _p) : _it(_p)
+				explicit	rev_bidirectional_iterator(node_pointer _p) : _it(_p)
 				{};
 
 				template <class Iter>
-					bidirectional_iterator(const bidirectional_iterator<Iter, node_pointer>& _i) : _it(_i.base())
+					rev_bidirectional_iterator(const rev_bidirectional_iterator<Iter, node_pointer>& _i) : _it(_i.base())
 					{};
 
 				node_pointer	base() const
@@ -47,49 +49,48 @@ namespace ft
 
 				reference	operator*() const
 				{
-					return this->_it->data;
+					return getPredecessor(this->_it)->data;
 				};
 
-				bidirectional_iterator&	operator++()
-				{
-					this->_it = getSuccessor(this->_it);
-					return (*this);
-				};
-
-				bidirectional_iterator	operator++(int)
-				{
-					bidirectional_iterator temp(*this);
-					++(*this);
-					return (temp);
-				};
-
-				bidirectional_iterator&	operator--()
+				rev_bidirectional_iterator&	operator++()
 				{
 					this->_it = getPredecessor(this->_it);
 					return (*this);
 				};
 
-				bidirectional_iterator	operator--(int)
+				rev_bidirectional_iterator	operator++(int)
 				{
-					bidirectional_iterator temp(*this);
+					rev_bidirectional_iterator temp(*this); ++(*this);
+					return (temp);
+				};
+
+				rev_bidirectional_iterator&	operator--()
+				{
+					this->_it = getSuccessor(this->_it);
+					return (*this);
+				};
+
+				rev_bidirectional_iterator	operator--(int)
+				{
+					rev_bidirectional_iterator temp(*this);
 					--(*this);
 					return (temp);
 				};
 
-				pointer	operator->() const
+				pointer			operator->() const
 				{
 					return (&(operator*()));
 				};
 		};
 
 	template <class Iterator, class NodePtr>
-		bool	operator==(const bidirectional_iterator<Iterator, NodePtr>& x, const bidirectional_iterator<Iterator, NodePtr>& y)
+		bool	operator==(const rev_bidirectional_iterator<Iterator, NodePtr>& x, const rev_bidirectional_iterator<Iterator, NodePtr>& y)
 		{
 			return (x.base() == y.base());
 		};
 
 	template <class Iterator, class NodePtr>
-		bool	operator!=(const bidirectional_iterator<Iterator, NodePtr>& x, const bidirectional_iterator<Iterator, NodePtr>& y)
+		bool	operator!=(const rev_bidirectional_iterator<Iterator, NodePtr>& x, const rev_bidirectional_iterator<Iterator, NodePtr>& y)
 		{
 			return (x.base() != y.base());
 		};
