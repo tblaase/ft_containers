@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 08:20:09 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/12 14:26:59 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/12 15:05:43 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,16 +166,16 @@ namespace ft
 			// ##### Element access #####
 				mapped_type& operator[] (const key_type& k)
 				{
-					return (*((this->insert(ft::make_pair(k, mapped_type())).first)).second);
+					return (*((this->insert(make_pair(k, mapped_type())).first)).second);
 				}
 
 			// ##### Modifiers #####
 				pair<iterator,bool> insert (const value_type& val)
 				{
 					if (this->count(val.first))
-						return (ft::make_pair(this->find(val.first), false));
+						return (make_pair(this->find(val.first), false));
 					this->_tree.insert(val);
-					return (ft::make_pair(this->find(val.first), true));
+					return (make_pair(this->find(val.first), true));
 				}
 
 				iterator insert (iterator position, const value_type& val)
@@ -228,29 +228,62 @@ namespace ft
 				}
 
 			// ##### Observers #####
-				key_compare key_comp() const;
+				key_compare key_comp() const
+				{
+					return (key_compare());
+				}
 
-				value_compare value_comp() const;
+				value_compare value_comp() const
+				{
+					return (value_compare(this->_comp));
+				}
 
 			// ##### Operations #####
-				iterator find (const key_type& k);
+				iterator find (const key_type& k)
+				{
+					return (iterator(this->_tree.find(k)));
+				}
 
-				const_iterator find (const key_type& k) const;
+				const_iterator find (const key_type& k) const
+				{
+					return (const_iterator(this->_tree.find(k)));
+				}
 
-				size_type count (const key_type& k) const;
+				size_type count (const key_type& k) const
+				{
+					return (this->_tree.search(k));
+				}
 
-				iterator lower_bound (const key_type& k);
+				iterator lower_bound (const key_type& k)
+				{
+					return (iterator(this->_tree.lower_bound(k)));
+				}
 
-				iterator upper_bound (const key_type& k);
+				iterator upper_bound (const key_type& k)
+				{
+					return (iterator(this->_tree.upper_bound(k)));
+				}
 
-				const_iterator upper_bound (const key_type& k) const;
+				const_iterator upper_bound (const key_type& k) const
+				{
+					return (const_iterator(this->_tree.upper_bound(k)));
+				}
 
-				pair<const_iterator,const_iterator> equal_range (const key_type& k) const;
+				pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+				{
+					return (ft::make_pair(this->lower_bound(k), this->upper_bound(k)));
+				}
 
-				pair<iterator,iterator> equal_range (const key_type& k);
+				pair<iterator,iterator> equal_range (const key_type& k)
+				{
+					return (ft::make_pair(this->lower_bound(k), this->upper_bound(k)));
+				}
 
 			// ##### Allocator #####
-				allocator_type get_allocator() const;
+				allocator_type get_allocator() const
+				{
+					return (this->_tree.get_allocator());
+				}
 		};
 		// non member functions
 		template <typename Key, typename T, typename Compare>
