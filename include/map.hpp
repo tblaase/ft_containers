@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 08:20:09 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/12 15:05:43 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/13 18:06:50 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,6 +257,11 @@ namespace ft
 				iterator lower_bound (const key_type& k)
 				{
 					return (iterator(this->_tree.lower_bound(k)));
+				}
+
+				const_iterator lower_bound (const key_type& k) const
+				{
+					return (const_iterator(this->_tree.lower_bound(k)));
 				}
 
 				iterator upper_bound (const key_type& k)
