@@ -10,7 +10,7 @@ CXXFLAGS	=	-std=c++98  -Wall -Wextra -Werror
 
 #additional flags
 CXXFLAGS	+=	-g # add this to get debug information
-# CXXFLAGS	+=	-fsanitize=address # check for invalid addresses, disable for checking with valgrind
+CXXFLAGS	+=	-fsanitize=address # check for invalid addresses, disable for checking with valgrind
 # CXXFLAGS	+=	-D LEAK # enable to check for leaks with leaks command for each container
 
 #directories
