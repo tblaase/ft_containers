@@ -210,7 +210,7 @@ namespace ft
 			this->_size = 0;
 		};
 
-		NodePtr		lower_bound(key_type key)
+		NodePtr		lower_bound(key_type key) const
 		{
 			NodePtr	temp = this->_getMin(this->_root);
 			if (temp == NULL || temp == this->_end)
@@ -226,7 +226,7 @@ namespace ft
 			return (temp);
 		}
 
-		NodePtr		upper_bound(key_type key)
+		NodePtr		upper_bound(key_type key) const
 		{
 			NodePtr	temp = this->_getMin(this->_root);
 			if (temp == NULL || temp == this->_end)
