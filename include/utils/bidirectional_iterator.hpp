@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 09:18:14 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/12 10:09:10 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/13 11:24:57 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ namespace ft
 
 				bidirectional_iterator&	operator++()
 				{
-					this->_it = getSuccessor(this->_it);
+					this->_it = _getSuccessor(this->_it);
 					return (*this);
 				};
 
@@ -65,7 +65,7 @@ namespace ft
 
 				bidirectional_iterator&	operator--()
 				{
-					this->_it = getPredecessor(this->_it);
+					this->_it = _getPredecessor(this->_it);
 					return (*this);
 				};
 

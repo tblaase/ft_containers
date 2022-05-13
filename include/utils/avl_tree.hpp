@@ -182,7 +182,7 @@ namespace ft
 			_addNode(this->_root, this->_root, val, val.first);
 			this->_getMax(this->_root)->right = this->_end;
 			this->_end->parent = this->_getMax(this->_root);
-			return (getSuccessor(ret));
+			return (_getSuccessor(ret));
 		};
 
 		bool			search(key_type key) const
@@ -219,7 +219,7 @@ namespace ft
 			{
 				if (key == temp->data.first)
 					break;
-				temp = getSuccessor(temp);
+				temp = _getSuccessor(temp);
 				if (temp == NULL || temp == this->_end)
 					return (this->_end);
 			}
@@ -233,7 +233,7 @@ namespace ft
 				return (this->_end);
 			while (temp->data.first <= key)
 			{
-				temp = getSuccessor(temp);
+				temp = _getSuccessor(temp);
 				if (temp == NULL || temp == this->_end)
 					return (this->_end);
 			}
@@ -532,7 +532,7 @@ namespace ft
 		};
 
 	template <class NodePtr>
-		NodePtr	getSuccessor(NodePtr node)
+		NodePtr	_getSuccessor(NodePtr node)
 		{
 			if (node->right)
 				return (_getMin(node->right));
@@ -546,7 +546,7 @@ namespace ft
 		};
 
 	template <class NodePtr>
-		NodePtr	getPredecessor(NodePtr node)
+		NodePtr	_getPredecessor(NodePtr node)
 		{
 			if (node->left)
 				return (_getMax(node->left));

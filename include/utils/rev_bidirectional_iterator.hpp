@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/12 09:47:26 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/12 10:09:13 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/13 11:25:11 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,12 @@ namespace ft
 
 				reference	operator*() const
 				{
-					return getPredecessor(this->_it)->data;
+					return _getPredecessor(this->_it)->data;
 				};
 
 				rev_bidirectional_iterator&	operator++()
 				{
-					this->_it = getPredecessor(this->_it);
+					this->_it = _getPredecessor(this->_it);
 					return (*this);
 				};
 
@@ -66,7 +66,7 @@ namespace ft
 
 				rev_bidirectional_iterator&	operator--()
 				{
-					this->_it = getSuccessor(this->_it);
+					this->_it = _getSuccessor(this->_it);
 					return (*this);
 				};
 
