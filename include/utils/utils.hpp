@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 12:19:31 by tblaase           #+#    #+#             */
-/*   Updated: 2022/04/26 16:44:15 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/13 10:41:45 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ namespace ft
 						{}
 
 					// pair constructor
-					pair(const first_type &a, second_type &b): first(a), second(b)
+					pair(const first_type &a, const second_type &b): first(a), second(b)
 					{}
 
 					// overload for = for pairs
