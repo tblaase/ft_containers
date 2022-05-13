@@ -1,0 +1,17 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: macos-catalina
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: run test script
+      run: ./test.sh
