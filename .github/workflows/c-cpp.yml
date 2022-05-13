@@ -13,5 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: run make re
+      run:  make re
     - name: run test script
-      run: ./test.sh
+      run:  ./test.sh
