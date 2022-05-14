@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 08:20:09 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/13 18:06:50 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/14 13:44:41 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,16 +166,16 @@ namespace ft
 			// ##### Element access #####
 				mapped_type& operator[] (const key_type& k)
 				{
-					return (*((this->insert(make_pair(k, mapped_type())).first)).second);
+					return ((*((this->insert(ft::make_pair(k, mapped_type()))).first)).second);
 				}
 
 			// ##### Modifiers #####
 				pair<iterator,bool> insert (const value_type& val)
 				{
 					if (this->count(val.first))
-						return (make_pair(this->find(val.first), false));
+						return (ft::make_pair(this->find(val.first), false));
 					this->_tree.insert(val);
-					return (make_pair(this->find(val.first), true));
+					return (ft::make_pair(this->find(val.first), true));
 				}
 
 				iterator insert (iterator position, const value_type& val)
@@ -206,14 +206,19 @@ namespace ft
 
 				size_type erase (const key_type& k)
 				{
+					size_type tmp_size = this->size();
 					this->_tree.deleteNode(k);
+					return (tmp_size - this->size());
 				}
 
-				void erase (iterator first, iterator last)
+				void erase (iterator first, iterator last) //needs testing with fsanitize=address
 				{
-					for (; first != last; ++first)
+					iterator	temp;
+					while (first != last)
 					{
-						this->erase((*first).first);
+						temp = first;
+						++first;
+						this->erase((*temp).first);
 					}
 				}
 
