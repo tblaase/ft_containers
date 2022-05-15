@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 08:20:09 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/14 13:44:41 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/15 13:13:17 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,44 +107,44 @@ namespace ft
 				}
 
 			// ##### Iterators #####
-				iterator begin()
-				{
-					return (this->_tree.begin());
-				}
+				// iterator begin()
+				// {
+				// 	return (iterator(this->_tree.begin()));
+				// }
 
 				const_iterator begin() const
 				{
-					return (this->_tree.begin());
+					return (const_iterator(this->_tree.begin()));
 				}
 
-				iterator end()
-				{
-					return (this->_tree.end());
-				}
+				// iterator end()
+				// {
+				// 	return (this->_tree.end());
+				// }
 
 				const_iterator end() const
 				{
-					return (this->_tree.end());
+					return (const_iterator(this->_tree.end()));
 				}
 
 				reverse_iterator rbegin()
 				{
-					return (this->_tree.rbegin());
+					return (reverse_iterator(this->_tree.rbegin()));
 				}
 
 				const_reverse_iterator rbegin() const
 				{
-					return (this->_tree.rbegin());
+					return (const_reverse_iterator(this->_tree.rbegin()));
 				}
 
 				reverse_iterator rend()
 				{
-					return (this->_tree.rend());
+					return (reverse_iterator(this->_tree.rend()));
 				}
 
 				const_reverse_iterator rend() const
 				{
-					return (this->_tree.rend());
+					return (const_reverse_iterator(this->_tree.rend()));
 				}
 
 			// ##### Capacity #####

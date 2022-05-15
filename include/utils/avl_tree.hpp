@@ -74,8 +74,7 @@ namespace ft
 
 	public:
 		NodePtr			_end;
-		avl_tree(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-			: _size(0), _comp(comp), _alloc(alloc)
+		avl_tree(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _size(0), _comp(comp), _alloc(alloc)
 			{
 			this->_end = this->_alloc.allocate(1);
 			this->_end->left = NULL;
@@ -90,27 +89,27 @@ namespace ft
 			this->_alloc.deallocate(this->_end, 1);
 		}
 
-		iterator				begin()
+		iterator	begin()
 		{
 			return (iterator(this->_getMin(this->_root)));
 		};
 
-		const_iterator			begin() const
+		const_iterator	begin() const
 		{
 			return (const_iterator(this->_getMin(this->_root)));
 		};
 
-		iterator				end()
+		iterator	end()
 		{
 			return (iterator(this->_end));
 		}
 
-		const_iterator			end() const
+		const_iterator	end() const
 		{
 			return (const_iterator(this->_end));
 		}
 
-		reverse_iterator		rbegin()
+		reverse_iterator	rbegin()
 		{
 			return (reverse_iterator(this->_end));
 		};
@@ -120,7 +119,7 @@ namespace ft
 			return (const_reverse_iterator(this->_end));
 		};
 
-		reverse_iterator		rend()
+		reverse_iterator	rend()
 		{
 			return (reverse_iterator(this->_getMin(this->_root)));
 		};
@@ -130,23 +129,23 @@ namespace ft
 			return (const_reverse_iterator(this->_getMin(this->_root)));
 		};
 
-		bool					empty() const
+		bool	empty() const
 		{
 			return (this->_size == 0);
 		};
 
-		size_type				size() const
+		size_type	size() const
 		{
 			return (this->_size);
 		};
 
-		size_type				max_size() const
+		size_type	max_size() const
 		{
 			return (this->_alloc.max_size());
 		};
 
 
-		node_allocator			get_allocator() const
+		node_allocator	get_allocator() const
 		{
 			return (this->_alloc);
 		};
@@ -167,14 +166,14 @@ namespace ft
 		{
 			return (this->_end);
 		}
-		void			insert(value_type val)
+		void	insert(value_type val)
 		{
 			this->_root = _addNode(this->_root, this->_root, val, val.first);
 			this->_getMax(this->_root)->right = this->_end;
 			this->_end->parent = this->_getMax(this->_root);
 		};
 
-		NodePtr			insertWithHint(NodePtr position, value_type val)
+		NodePtr	insertWithHint(NodePtr position, value_type val)
 		{
 			NodePtr	ret = _addNode(position, position, val, val.first);
 			if (this->_root->parent)
@@ -185,24 +184,24 @@ namespace ft
 			return (_getSuccessor(ret));
 		};
 
-		bool			search(key_type key) const
+		bool	search(key_type key) const
 		{
 			return (_search(this->_root, key));
 		};
 
-		NodePtr			find(key_type key)
+		NodePtr	find(key_type key)
 		{
 			if (!this->search(key))
 				return (this->_end);
 			return (_find(this->_root, key));
 		};
 
-		void			deleteNode(key_type key)
+		void	deleteNode(key_type key)
 		{
 			this->_root = _deleteNode(this->_root, key);
 		};
 
-		void			clear()
+		void	clear()
 		{
 			_deleteavl_tree(this->_root);
 			this->_end->parent = NULL;
@@ -210,7 +209,7 @@ namespace ft
 			this->_size = 0;
 		};
 
-		NodePtr		lower_bound(key_type key) const
+		NodePtr	lower_bound(key_type key) const
 		{
 			NodePtr	temp = this->_getMin(this->_root);
 			if (temp == NULL || temp == this->_end)
@@ -226,7 +225,7 @@ namespace ft
 			return (temp);
 		}
 
-		NodePtr		upper_bound(key_type key) const
+		NodePtr	upper_bound(key_type key) const
 		{
 			NodePtr	temp = this->_getMin(this->_root);
 			if (temp == NULL || temp == this->_end)
@@ -276,21 +275,21 @@ namespace ft
 			return (_getHeight(node->left) - _getHeight(node->right));
 		};
 
-		NodePtr _getMax(NodePtr node) const
+		NodePtr	_getMax(NodePtr node) const
 		{
 			while (node->right != NULL && node->right != this->_end)
 				node = node->right;
 			return (node);
 		};
 
-		NodePtr _getMin(NodePtr node) const
+		NodePtr	_getMin(NodePtr node) const
 		{
 			while (node->left != NULL && node != this->_end)
 				node = node->left;
 			return (node);
 		};
 
-		NodePtr _rightRotate(NodePtr node)
+		NodePtr	_rightRotate(NodePtr node)
 		{
 			NodePtr	temp = node->left;
 			NodePtr	temp2 = temp->right;
@@ -316,7 +315,7 @@ namespace ft
 			return (temp);
 		};
 
-		NodePtr _leftRotate(NodePtr node)
+		NodePtr	_leftRotate(NodePtr node)
 		{
 			NodePtr	temp = node->right;
 			NodePtr	temp2 = temp->left;
@@ -342,7 +341,7 @@ namespace ft
 			return (temp);
 		};
 
-		NodePtr _checkBalance(NodePtr node, key_type key)
+		NodePtr	_checkBalance(NodePtr node, key_type key)
 		{
 			int	balanceFactor = _getBalanceFactor(node);
 			if (balanceFactor > 1)
@@ -368,7 +367,7 @@ namespace ft
 			return (node);
 		};
 
-		NodePtr _reBalance(NodePtr node)
+		NodePtr	_reBalance(NodePtr node)
 		{
 			int balanceFactor = _getBalanceFactor(node);
 			if (balanceFactor > 1)
@@ -405,7 +404,7 @@ namespace ft
 			node = NULL;
 		}
 
-		NodePtr _deleteNode(NodePtr node, key_type key)
+		NodePtr	_deleteNode(NodePtr node, key_type key)
 		{
 			if (node == NULL || node == this->_end)
 				return (node);
@@ -470,7 +469,7 @@ namespace ft
 			return (_reBalance(node));
 		};
 
-		NodePtr		_find(NodePtr node, key_type key) const
+		NodePtr	_find(NodePtr node, key_type key) const
 		{
 			if (node == NULL)
 				return (node);
@@ -494,7 +493,7 @@ namespace ft
 				return (true);
 		};
 
-		NodePtr _addNode(NodePtr node, NodePtr parent, value_type val, key_type key)
+		NodePtr	_addNode(NodePtr node, NodePtr parent, value_type val, key_type key)
 		{
 			if (node == NULL || node == this->_end)
 			{
@@ -516,7 +515,7 @@ namespace ft
 	};
 
 	template <class NodePtr>
-		NodePtr _getMin(NodePtr node)
+		NodePtr	_getMin(NodePtr node)
 		{
 			while (node->left != NULL)
 				node = node->left;
@@ -524,7 +523,7 @@ namespace ft
 		};
 
 	template <class NodePtr>
-		NodePtr _getMax(NodePtr node)
+		NodePtr	_getMax(NodePtr node)
 		{
 			while (node->right != NULL)
 				node = node->right;
