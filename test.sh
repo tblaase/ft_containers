@@ -1,6 +1,7 @@
 #!/bin/bash
 
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 RESET='\033[0m'
 
 make re
@@ -36,3 +37,5 @@ then
 else
 	echo -e "${RED}no binaries to execute, check file-permissions and/or if make failed.${RESET}"
 fi
+
+echo -e "${GREEN}Finished - check the printed diffs.${RESET}"
