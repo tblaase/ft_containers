@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/15 14:00:43 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/19 17:51:07 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # define TESTED_NAMESPACE std
 #include <vector>
 #include <map>
-#include <list>
 #include <stack>
 #else
 #include "../include/vector.hpp"
@@ -106,6 +105,7 @@ int main()
 
 		next_vct:
 		TESTED_NAMESPACE::vector<int> vct_2;
+		TESTED_NAMESPACE::vector< int >::iterator it;
 		std::cout << "\n\tfilling vct_2 now" << std::endl;
 		for (size_t i = 0; i < test_val * 2; ++i)
 		{
@@ -121,6 +121,10 @@ int main()
 		}
 		std::cout << "\tvct_2 size: " << vct_2.size() << std::endl;
 		std::cout << "\tvct_2 capacity: " << vct_2.capacity() << std::endl;
+		it = vct_2.begin();
+		std::cout << "\tprinting the first 5 elements of vct_1" << std::endl;
+		for (size_t i = 0; i < 5; ++i)
+			std::cout << "\telem " << i << ": " << *it++ << std::endl;
 
 		std::cout << "\terasing vct_2 now" << std::endl;
 		vct_2.erase(vct_2.begin(), vct_2.end());;
@@ -277,62 +281,60 @@ int main()
 	return (0);
 }
 
+// #include "../include/tester_utils/common_map.hpp"
 
-// #include "../include/tester_utils/base.hpp"
-// #include "../containers_test/srcs/map/common.hpp"
+// #include <list>
 
 // #define T1 int
 // #define T2 std::string
+// typedef _pair<const T1, T2> T3;
 
-// TESTED_NAMESPACE::map<T1, T2> mp;
-// TESTED_NAMESPACE::map<T1, T2>::iterator it = mp.end();
+// static int iter = 0;
 
-// void	ft_find(T1 const &k)
+// template <typename MAP, typename U>
+// void	ft_erase(MAP &mp, U param)
 // {
-// 	TESTED_NAMESPACE::map<T1, T2>::iterator ret = mp.find(k);
-
-// 	if (ret != it)
-// 		printPair(ret);
-// 	else
-// 		std::cout << "map::find(" << k << ") returned end()" << std::endl;
+// 	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+// 	mp.erase(param);
+// 	printSize(mp);
 // }
 
-// void	ft_count(T1 const &k)
+// template <typename MAP, typename U, typename V>
+// void	ft_erase(MAP &mp, U param, V param2)
 // {
-// 	std::cout << "map::count(" << k << ")\treturned [" << mp.count(k) << "]" << std::endl;
+// 	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+// 	mp.erase(param, param2);
+// 	printSize(mp);
 // }
 
 // int		main(void)
 // {
-// 	mp[42] = "fgzgxfn";
-// 	mp[25] = "funny";
-// 	mp[80] = "hey";
-// 	mp[12] = "no";
-// 	mp[27] = "bee";
-// 	mp[90] = "8";
+// 	std::list<T3> lst;
+// 	unsigned int lst_size = 10;
+// 	for (unsigned int i = 0; i < lst_size; ++i)
+// 		lst.push_back(T3(i, std::string((lst_size - i), i + 65)));
+// 	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
 // 	printSize(mp);
 
-// 	std::cout << "\t-- FIND --" << std::endl;
-// 	ft_find(12);
-// 	ft_find(3);
-// 	ft_find(35);
-// 	ft_find(90);
-// 	ft_find(100);
+// 	ft_erase(mp, ++mp.begin());
 
-// 	std::cout << "\t-- COUNT --" << std::endl;
-// 	ft_count(-3);
-// 	ft_count(12);
-// 	ft_count(3);
-// 	ft_count(35);
-// 	ft_count(90);
-// 	ft_count(100);
+// 	ft_erase(mp, mp.begin());
+// 	ft_erase(mp, --mp.end());
 
-// 	mp.find(27)->second = "newly inserted mapped_value";
+// 	ft_erase(mp, mp.begin(), ++(++(++mp.begin())));
+// 	ft_erase(mp, --(--(--mp.end())), --mp.end());
 
+// 	mp[10] = "Hello";
+// 	mp[11] = "Hi there";
 // 	printSize(mp);
+// 	ft_erase(mp, --(--(--mp.end())), mp.end());
 
-// 	TESTED_NAMESPACE::map<T1, T2> const c_map(mp.begin(), mp.end());
-// 	std::cout << "const map.find(" << 42 << ")->second: [" << c_map.find(42)->second << "]" << std::endl;
-// 	std::cout << "const map.count(" << 80 << "): [" << c_map.count(80) << "]" << std::endl;
+// 	mp[12] = "ONE";
+// 	mp[13] = "TWO";
+// 	mp[14] = "THREE";
+// 	mp[15] = "FOUR";
+// 	printSize(mp);
+// 	ft_erase(mp, mp.begin(), mp.end());
+
 // 	return (0);
 // }
