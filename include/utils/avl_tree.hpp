@@ -32,18 +32,18 @@ namespace ft
 				node_ptr		right;
 				int				height;
 
-				Node(void): height(0), parent(NULL), left(NULL), right(NULL) { }
+				Node(void): parent(NULL), left(NULL), right(NULL), height(0) { }
 				Node(const value_type &value): data(value), parent(NULL), left(NULL), right(NULL), height(0) { }
 				Node(const Node& other): data(other.data), parent(other.parent), left(other.left), right(other.right), height(other.height) { }
 				~Node() { }
 
 				Node&	operator=(const Node& other)
 				{
-					data = other.data;
-					parent = other.parent;
-					right = other.right;
-					left = other.left;
-					height = other.height;
+					this->data = other.data;
+					this->parent = other.parent;
+					this->right = other.right;
+					this->left = other.left;
+					this->height = other.height;
 
 					return (*this);
 				}
@@ -779,10 +779,10 @@ namespace ft
 
 			node_ptr	get_lowest() const
 			{
-				node_ptr	res = _root;
+				node_ptr	res = this->_root;
 
 				if (!res)
-					return (_end);
+					return (this->_end);
 				while (res->left)
 					res = res->left;
 				return (res);
@@ -790,11 +790,11 @@ namespace ft
 
 			node_ptr	get_biggest() const
 			{
-				node_ptr	res = _root;
+				node_ptr	res = this->_root;
 
 				if (!res)
 					return (NULL);
-				while (res->right && res->right != _end)
+				while (res->right && res->right != this->_end)
 					res = res->right;
 				return (res);
 			}
@@ -806,6 +806,25 @@ namespace ft
 				this->_root = this->_end;
 				this->_size = 0;
 			};
+
+			void		erase(value_type key)
+			{
+				node_ptr	node_to_delete;
+
+				node_to_delete = this->exist(key);
+				if (!node_to_delete)
+					return ;
+				else if (_size == 1)
+					this->_root = NULL;
+				else
+				{
+					this->_deleteNode(this->_root, key);
+				}
+				this->_alloc.destroy(node_to_delete);
+				this->_alloc.deallocate(node_to_delete, 1);
+				this->_size--;
+				this->_connect_end();
+			}
 
 			node_ptr	_get_successor(node_ptr node)
 			{
@@ -832,11 +851,11 @@ namespace ft
 			{
 				node_ptr	biggest;
 
-				biggest = get_biggest();
+				biggest = this->get_biggest();
 				if (biggest)
 					biggest->right = NULL;
-				if (_end)
-					_end->parent = NULL;
+				if (this->_end)
+					this->_end->parent = NULL;
 			}
 			void 		_connect_end()
 			{
@@ -844,10 +863,10 @@ namespace ft
 
 				biggest = get_biggest();
 				if (biggest)
-					biggest->right = _end;
-				if (!_end)
-					_end = newNode(value_type());
-				_end->parent = biggest;
+					biggest->right = this->_end;
+				if (!this->_end)
+					this->_end = this->newNode(value_type());
+				this->_end->parent = biggest;
 			}
 
 
@@ -862,7 +881,7 @@ namespace ft
 			{
 				node_ptr	node;
 
-				node = _find(_root, key);
+				node = _find(this->_root, key);
 				return(node);
 			}
 
@@ -870,9 +889,9 @@ namespace ft
 			{
 				node_ptr	node;
 
-				node = _find(_root, key);
+				node = _find(this->_root, key);
 				if (!node)
-					return (_end);
+					return (this->_end);
 				return (node);
 			};
 
@@ -880,13 +899,12 @@ namespace ft
 			{
 				if (!node)
 					return (NULL);
-				else if (_comp(key, node->data) && !_comp(node->data, key))
-					return (_find(node->left, key));
-				else if (!_comp(key, node->data) && _comp(node->data, key))
-					return (_find(node->right, key));
+				else if (this->_comp(key, node->data) && !this->_comp(node->data, key))
+					return (this->_find(node->left, key));
+				else if (!this->_comp(key, node->data) && this->_comp(node->data, key))
+					return (this->_find(node->right, key));
 				return (node);
 			}
-
 
 			// A utility function to get the
 			// height of the tree
@@ -902,7 +920,7 @@ namespace ft
 			NULL left and right pointers. */
 			node_ptr newNode(value_type val)
 			{
-				node_ptr node = _create_node(val);
+				node_ptr node = this->_create_node(val);
 				// node->val = val;
 				node->left = NULL;
 				node->right = NULL;
@@ -915,8 +933,8 @@ namespace ft
 			{
 				node_ptr	new_node;
 
-				new_node = _alloc.allocate(1);
-				_alloc.construct(new_node, value);
+				new_node = this->_alloc.allocate(1);
+				this->_alloc.construct(new_node, value);
 				return (new_node);
 			}
 
@@ -933,10 +951,8 @@ namespace ft
 				y->left = T2;
 
 				// Update heights
-				y->height = max(height(y->left),
-								height(y->right)) + 1;
-				x->height = max(height(x->left),
-								height(x->right)) + 1;
+				y->height = this->max(this->height(y->left), this->height(y->right)) + 1;
+				x->height = this->max(this->height(x->left), this->height(x->right)) + 1;
 
 				// Return new root
 				return x;
@@ -955,10 +971,8 @@ namespace ft
 				x->right = T2;
 
 				// Update heights
-				x->height = max(height(x->left),
-								height(x->right)) + 1;
-				y->height = max(height(y->left),
-								height(y->right)) + 1;
+				x->height = this->max(this->height(x->left), this->height(x->right)) + 1;
+				y->height = this->max(this->height(y->left), this->height(y->right)) + 1;
 
 				// Return new root
 				return y;
@@ -969,7 +983,7 @@ namespace ft
 			{
 				if (N == NULL)
 					return 0;
-				return height(N->left) - height(N->right);
+				return this->height(N->left) - this->height(N->right);
 			}
 
 
@@ -979,27 +993,27 @@ namespace ft
 				node_ptr					new_node;
 				ft::pair<node_ptr, bool>	res;
 
-				exists = exist(val);
+				exists = this->exist(val);
 				if (exists)
 				 	return (ft::make_pair(exists, false));
 				new_node = this->_create_node(val);
-				if (!_root)
+				if (!this->_root)
 				{
-					_root = new_node;
-					++_size;
-					_connect_end();
+					this->_root = new_node;
+					++this->_size;
+					this->_connect_end();
 					return (ft::make_pair(new_node, true));
 				}
-				_cut_end_connections();
-				res = _insert(_root, new_node);
-				++_size;
-				_connect_end();
+				this->_cut_end_connections();
+				res = _insert(this->_root, new_node);
+				++this->_size;
+				this->_connect_end();
 				return (res);
 			}
 
 			ft::pair<node_ptr, bool>	_insert(node_ptr parent, node_ptr new_node)
 			{
-				if (_comp(parent->data, new_node->data))
+				if (this->_comp(parent->data, new_node->data))
 				{
 					if (!parent->right)
 					{
@@ -1008,7 +1022,7 @@ namespace ft
 						// new_node->is_left = 0;
 					}
 					else
-						_insert(parent->right, new_node);
+						this->_insert(parent->right, new_node);
 				}
 				else
 				{
@@ -1019,41 +1033,45 @@ namespace ft
 						// new_node->is_left = 1;
 					}
 					else
-						_insert(parent->left, new_node);
+						this->_insert(parent->left, new_node);
 				}
 				// _check_color(new_node);
-				this->_root = _balance(new_node, new_node->data);
+				this->_root = this->_balance(new_node, new_node->data);
 
 				return (ft::make_pair(new_node, true));
 			}
 
 			node_ptr _balance(node_ptr node, value_type val)
 			{
-				int balance = getBalance(node);
+				int balance = this->getBalance(node);
 
 				// If this node becomes unbalanced, then
 				// there are 4 cases
 
 				// Left Left Case
-				if (balance > 1 && val < node->left->data)
-					return rightRotate(node);
+				// if (balance > 1 && val < node->left->data)
+				if (balance > 1 && this->_comp(val, node->left->data))
+					return this->rightRotate(node);
 
 				// Right Right Case
-				if (balance < -1 && val > node->right->data)
-					return leftRotate(node);
+				// if (balance < -1 && val > node->right->data)
+				if (balance < -1 && !this->_comp(val, node->right->data))
+					return this->leftRotate(node);
 
 				// Left Right Case
-				if (balance > 1 && val > node->left->data)
+				// if (balance > 1 && val > node->left->data)
+				if (balance > 1 && !this->_comp(val, node->left->data))
 				{
-					node->left = leftRotate(node->left);
-					return rightRotate(node);
+					node->left = this->leftRotate(node->left);
+					return this->rightRotate(node);
 				}
 
 				// Right Left Case
-				if (balance < -1 && val < node->right->data)
+				// if (balance < -1 && val < node->right->data)
+				if (balance < -1 && this->_comp(val, node->right->data))
 				{
-					node->right = rightRotate(node->right);
-					return leftRotate(node);
+					node->right = this->rightRotate(node->right);
+					return this->leftRotate(node);
 				}
 				/* return the (unchanged) node pointer */
 				return node;
@@ -1065,7 +1083,7 @@ namespace ft
 			{
 				/* 1. Perform the normal BST insertion */
 				if (node == NULL)
-					return(newNode(val));
+					return(this->newNode(val));
 
 				// if (val < node->data.first)
 				// 	node->left = _insert(node->left, val);
@@ -1075,8 +1093,7 @@ namespace ft
 				// 	return node;
 
 				/* 2. Update height of this ancestor node */
-				node->height = 1 + max(height(node->left),
-									height(node->right));
+				node->height = 1 + this->max(this->height(node->left), this->height(node->right));
 
 				/* 3. Get the balance factor of this ancestor
 					node to check whether this node became
@@ -1129,112 +1146,104 @@ namespace ft
 			// with given key from subtree with
 			// given root. It returns root of the
 			// modified subtree.
-			// node_ptr deleteNode(node_ptr root, value_type val)
-			// {
+			node_ptr _deleteNode(node_ptr root, value_type val)
+			{
 
-			// 	// STEP 1: PERFORM STANDARD BST DELETE
-			// 	if (root == NULL)
-			// 		return (root);
+				// STEP 1: PERFORM STANDARD BST DELETE
+				if (root == NULL)
+					return (root);
 
-			// 	// If the key to be deleted is smaller
-			// 	// than the root's key, then it lies
-			// 	// in left subtree
-			// 	if (val < root->val)
-			// 		root->left = deleteNode(root->left, val);
+				// If the key to be deleted is smaller
+				// than the root's key, then it lies
+				// in left subtree
+				if (val < root->data)
+					root->left = this->_deleteNode(root->left, val);
 
-			// 	// If the key to be deleted is greater
-			// 	// than the root's key, then it lies
-			// 	// in right subtree
-			// 	else if(val > root->val )
-			// 		root->right = deleteNode(root->right, val);
+				// If the key to be deleted is greater
+				// than the root's key, then it lies
+				// in right subtree
+				else if(val > root->data)
+					root->right = this->_deleteNode(root->right, val);
 
-			// 	// if key is same as root's key, then
-			// 	// This is the node to be deleted
-			// 	else
-			// 	{
-			// 		// node with only one child or no child
-			// 		if( (root->left == NULL) ||
-			// 			(root->right == NULL) )
-			// 		{
-			// 			node_ptr temp = root->left ?
-			// 						root->left :
-			// 						root->right;
+				// if key is same as root's key, then
+				// This is the node to be deleted
+				else
+				{
+					// node with only one child or no child
+					if( (root->left == NULL) ||
+						(root->right == NULL) )
+					{
+						node_ptr temp = root->left ?root->left : root->right;
 
-			// 			// No child case
-			// 			if (temp == NULL)
-			// 			{
-			// 				temp = root;
-			// 				root = NULL;
-			// 			}
-			// 			else // One child case
-			// 			*root = *temp; // Copy the contents of
-			// 						// the non-empty child
-			// 			// free(temp);
-			// 			this->_alloc.destroy(temp);
-			// 			this->_alloc.deallocate(temp);
-			// 		}
-			// 		else
-			// 		{
-			// 			// node with two children: Get the inorder
-			// 			// successor (smallest in the right subtree)
-			// 			// node_ptr temp = minValueNode(root->right);
-			// 			node_ptr temp = minValueNode(root->right);
+						// No child case
+						if (temp == NULL)
+						{
+							temp = root;
+							root = NULL;
+						}
+						else // One child case
+						root = temp; // Copy the contents of
+									// the non-empty child
+						// free(temp);
+						this->_alloc.destroy(temp);
+						this->_alloc.deallocate(temp, 1);
+					}
+					else
+					{
+						// node with two children: Get the inorder
+						// successor (smallest in the right subtree)
+						// node_ptr temp = minValueNode(root->right);
+						node_ptr temp = this->minValueNode(root->right);
 
-			// 			// Copy the inorder successor's
-			// 			// data to this node
-			// 			root->val = temp->val;
+						// Copy the inorder successor's
+						// data to this node
+						root->data = temp->data;
 
-			// 			// Delete the inorder successor
-			// 			root->right = deleteNode(root->right,
-			// 									temp->val);
-			// 		}
-			// 	}
+						// Delete the inorder successor
+						root->right = this->_deleteNode(root->right, temp->data);
+					}
+				}
 
-			// 	// If the tree had only one node
-			// 	// then return
-			// 	if (root == NULL)
-			// 	return (root);
+				// If the tree had only one node
+				// then return
+				if (root == NULL)
+					return (root);
 
-			// 	// STEP 2: UPDATE HEIGHT OF THE CURRENT NODE
-			// 	root->height = 1 + max(height(root->left),
-			// 						height(root->right));
+				// STEP 2: UPDATE HEIGHT OF THE CURRENT NODE
+				root->height = 1 + this->max(this->height(root->left), this->height(root->right));
 
-			// 	// STEP 3: GET THE BALANCE FACTOR OF
-			// 	// THIS NODE (to check whether this
-			// 	// node became unbalanced)
-			// 	int balance = getBalance(root);
+				// STEP 3: GET THE BALANCE FACTOR OF
+				// THIS NODE (to check whether this
+				// node became unbalanced)
+				int balance = this->getBalance(root);
 
-			// 	// If this node becomes unbalanced,
-			// 	// then there are 4 cases
+				// If this node becomes unbalanced,
+				// then there are 4 cases
 
-			// 	// Left Left Case
-			// 	if (balance > 1 &&
-			// 		getBalance(root->left) >= 0)
-			// 		return (rightRotate(root));
+				// Left Left Case
+				if (balance > 1 && this->getBalance(root->left) >= 0)
+					return (this->rightRotate(root));
 
-			// 	// Left Right Case
-			// 	if (balance > 1 &&
-			// 		getBalance(root->left) < 0)
-			// 	{
-			// 		root->left = leftRotate(root->left);
-			// 		return (rightRotate(root));
-			// 	}
+				// Left Right Case
+				if (balance > 1 && this->getBalance(root->left) < 0)
+				{
+					root->left = this->leftRotate(root->left);
+					return (this->rightRotate(root));
+				}
 
-			// 	// Right Right Case
-			// 	if (balance < -1 &&
-			// 		getBalance(root->right) <= 0)
-			// 		return (leftRotate(root));
+				// Right Right Case
+				if (balance < -1 && this->getBalance(root->right) <= 0)
+					return (this->leftRotate(root));
 
-			// 	// Right Left Case
-			// 	if (balance < -1 &&
-			// 		getBalance(root->right) > 0)
-			// 	{
-			// 		root->right = rightRotate(root->right);
-			// 		return (leftRotate(root));
-			// 	}
+				// Right Left Case
+				if (balance < -1 && this->getBalance(root->right) > 0)
+				{
+					root->right = this->rightRotate(root->right);
+					return (this->leftRotate(root));
+				}
 
-			// 	return (root);
-			// }
+				return (root);
+			}
 
 			// A utility function to print preorder
 			// traversal of the tree.

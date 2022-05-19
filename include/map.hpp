@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 08:20:09 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/19 15:37:06 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/19 17:31:21 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -609,28 +609,28 @@ namespace ft {
 			// 	return (old_size - this->_tree.size());
 			// }
 
-				void erase (iterator position)
-				{
-					this->erase((*position).first);
-				}
+			void	erase(iterator pos)
+			{
+				value_type val = *pos;
+				this->_tree.erase(val);
+			}
 
-				size_type erase (const key_type& k)
+			void	erase(iterator first, iterator last)
+			{
+				while (first != last)
 				{
-					size_type tmp_size = this->size();
-					this->_tree.deleteNode(this->_tree._root, ft::make_pair(k, mapped_type()));
-					return (tmp_size - this->size());
+					iterator	to_delete = first++;
+					this->erase(to_delete);
 				}
+			}
+			size_type	erase(const key_type& key)
+			{
+				size_type	tmp_size;
 
-				void erase (iterator first, iterator last) //needs testing with fsanitize=address
-				{
-					iterator	temp;
-					while (first != last)
-					{
-						temp = first++;
-						this->erase((*temp).first);
-						// ++first;
-					}
-				}
+				tmp_size = this->_tree.size();
+				this->_tree.erase(ft::make_pair(key, mapped_type()));
+				return (tmp_size - this->_tree.size());
+			}
 
 			void	swap(map& src)
 			{

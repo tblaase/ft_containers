@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 12:19:31 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/19 15:30:57 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/19 17:02:03 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ namespace ft
 					pair(const first_type &a, const second_type &b): first(a), second(b)
 					{}
 
-					// overload for = for pairs
-					pair &operator=(const pair &src)
+					// overload assign operator
+					pair& operator=(const pair& src)
 					{
 						if (*this == src)
 							return (*this);
