@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/12 09:47:26 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/13 11:25:11 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/19 15:30:47 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,33 +16,102 @@
 
 namespace ft
 {
-	template <class T, class NodePtr>
-		class rev_bidirectional_iterator
+	// template <class Node>
+	// 	class rev_bidirectional_iterator
+	// 	{
+	// 		public:
+	// 			typedef T												iterator_type;
+	// 			typedef typename ft::bidirectional_iterator_tag			iterator_category;
+	// 			typedef typename iterator_traits<T>::difference_type	difference_type;
+	// 			typedef typename iterator_traits<T>::value_type			value_type;
+	// 			typedef typename iterator_traits<T>::reference			reference;
+	// 			typedef typename iterator_traits<T>::pointer			pointer;
+	// 			typedef NodePtr											node_pointer;
+	template <class Node>
+		class rev_bidirectional_iterator: public ft::iterator<bidirectional_iterator_tag, Node>
 		{
 			public:
-				typedef T												iterator_type;
-				typedef typename ft::bidirectional_iterator_tag			iterator_category;
-				typedef typename iterator_traits<T>::difference_type	difference_type;
-				typedef typename iterator_traits<T>::value_type			value_type;
-				typedef typename iterator_traits<T>::reference			reference;
-				typedef typename iterator_traits<T>::pointer			pointer;
-				typedef NodePtr											node_pointer;
-
+			typedef Node*									iterator_type;
+			typedef Node									iterator_value;
+			typedef typename iterator_value::value_type		value_type;
+			typedef value_type&								reference;
+			typedef value_type*								pointer;
 			private:
-				node_pointer	_it;
+				iterator_type	_it;
+
+				iterator_type	_getSuccessor(iterator_type node)
+				{
+					iterator_type	res;
+
+					if (!node)
+						return (NULL);
+					if (node->right)
+					{
+						res = node->right;
+						while (res->left)
+							res = res->left;
+					}
+					else
+					{
+						res = node->parent;
+						while (res)
+						{
+							node = res;
+							res = res->parent;
+						}
+					}
+					return(res);
+				}
+
+				iterator_type	_getPredecessor(iterator_type node)
+				{
+					iterator_type	res;
+
+					if (!node)
+						return (NULL);
+					if (node->left)
+					{
+						res = node->left;
+						while (res->right)
+							res = res->right;
+					}
+					else
+					{
+						res = node->parent;
+						while (res)
+						{
+							node = res;
+							res = res->parent;
+						}
+					}
+					return(res);
+				}
 
 			public:
 				rev_bidirectional_iterator() : _it()
 				{};
 
-				explicit	rev_bidirectional_iterator(node_pointer _p) : _it(_p)
+				explicit	rev_bidirectional_iterator(iterator_type _p) : _it(_p)
 				{};
 
-				template <class Iter>
-					rev_bidirectional_iterator(const rev_bidirectional_iterator<Iter, node_pointer>& _i) : _it(_i.base())
-					{};
+				rev_bidirectional_iterator(const rev_bidirectional_iterator& src)
+				{
+					*this = src;
+				}
 
-				node_pointer	base() const
+				template <class Iter>
+					rev_bidirectional_iterator& operator=(const Iter& src)
+					{
+						if (this != src)
+							this->_it = src.base();
+						return (*this);
+					}
+
+				// template <class Iter>
+				// 	rev_bidirectional_iterator(const rev_bidirectional_iterator<Iter, node_pointer>& _i) : _it(_i.base())
+				// 	{};
+
+				iterator_type	base() const
 				{
 					return this->_it;
 				};
@@ -83,14 +152,14 @@ namespace ft
 				};
 		};
 
-	template <class Iterator, class NodePtr>
-		bool	operator==(const rev_bidirectional_iterator<Iterator, NodePtr>& x, const rev_bidirectional_iterator<Iterator, NodePtr>& y)
+	template <class Node>
+		bool	operator==(const rev_bidirectional_iterator<Node>& x, const rev_bidirectional_iterator<Node>& y)
 		{
 			return (x.base() == y.base());
 		};
 
-	template <class Iterator, class NodePtr>
-		bool	operator!=(const rev_bidirectional_iterator<Iterator, NodePtr>& x, const rev_bidirectional_iterator<Iterator, NodePtr>& y)
+	template <class Node>
+		bool	operator!=(const rev_bidirectional_iterator<Node>& x, const rev_bidirectional_iterator<Node>& y)
 		{
 			return (x.base() != y.base());
 		};
