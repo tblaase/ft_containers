@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:50:45 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/19 15:31:24 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/23 17:46:53 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,39 +80,13 @@ namespace ft
 					this->_alloc.deallocate(this->_array, cap);
 				}
 
-
-// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ONLY FOR TESSTINNG, REMOVE BEFORE PUBLISHING↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-					// void	_printSize(ft::vector<T> const &vct, bool print_content = true)
-					// {
-					// 	const size_type size = vct.size();
-					// 	const size_type capacity = vct.capacity();
-					// 	const std::string isCapacityOk = (capacity >= size) ? "OK" : "KO";
-					// 	// Cannot limit capacity's max value because it's implementation dependent
-
-					// 	std::cout << "\t!!!size: " << size << std::endl;
-					// 	std::cout << "\t!!!capacity: " << isCapacityOk << std::endl;
-					// 	std::cout << "\t!!!max_size: " << vct.max_size() << std::endl;
-					// 	if (print_content)
-					// 	{
-					// 		typename ft::vector<T>::const_iterator it = vct.begin();
-					// 		typename ft::vector<T>::const_iterator ite = vct.end();
-					// 		std::cout << std::endl << "\t!!!Content is:" << std::endl;
-					// 		for (; it != ite; ++it)
-					// 			std::cout << "\t!!!- " << *it << std::endl;
-					// 	}
-					// 	std::cout << "\t!!!###############################################" << std::endl;
-					// }
-// ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ONLY FOR TESSTINNG, REMOVE BEFORE PUBLISHING↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-
 		public:
 				// default constructor
 					// creates vector with size of 0
 				explicit vector(const allocator_type& alloc = allocator_type()):
 					_array(NULL), _size(0), _capacity(0), _alloc(alloc)
 				{
-					if (this->_capacity > this->max_size())
-						throw (std::length_error("cannot create ft::vector larger than max_size()"));
-					this->_array = _alloc.allocate(this->_capacity);
+					this->_array = this->_alloc.allocate(this->_capacity);
 				}
 
 				// fill constructor
@@ -122,7 +96,7 @@ namespace ft
 				{
 					if (this->_capacity > this->max_size())
 						throw (std::length_error("cannot create ft::vector larger than max_size()"));
-					this->_array = _alloc.allocate(this->_capacity);
+					this->_array = this->_alloc.allocate(this->_capacity);
 					for (size_type i = 0; i < n; ++i)
 						this->_alloc.construct(this->_array + i, val);
 				}
@@ -142,7 +116,7 @@ namespace ft
 							++tmp;
 						}
 						this->_capacity = this->_size;
-						this->_array = _alloc.allocate(this->_capacity);
+						this->_array = this->_alloc.allocate(this->_capacity);
 						for (size_type i = 0; first != last; ++i)
 						{
 							this->_alloc.construct(this->_array + i, *(first));
@@ -174,7 +148,7 @@ namespace ft
 					this->_size = src._size;
 					this->_capacity = src._capacity;
 					this->_alloc = src._alloc;
-					this->_array = _alloc.allocate(this->_capacity);
+					this->_array = this->_alloc.allocate(this->_capacity);
 					for (size_type i = 0; i < this->_size; ++i)
 						this->_alloc.construct(this->_array + i, src._array[i]);
 
@@ -190,7 +164,7 @@ namespace ft
 
 				const_iterator	begin() const
 				{
-					return (const_iterator(_array));
+					return (const_iterator(this->_array));
 				}
 
 				iterator	end()
@@ -222,6 +196,7 @@ namespace ft
 				{
 					return (const_reverse_iterator(this->_array));
 				}
+
 		// ##### Member functions for Capacity #####
 
 				size_type	size() const
@@ -288,7 +263,7 @@ namespace ft
 					this->_array = new_arr;
 				}
 
-		// ##### Member functions for element access #####
+		// ##### Member functions for Element access #####
 
 				reference	operator[](size_type position)
 				{
@@ -303,14 +278,14 @@ namespace ft
 				reference	at(size_type n)
 				{
 					if (n >= this->size())
-						throw (std::out_of_range("cannot create ft::vector larger than max_size()"));
+						throw (std::out_of_range("cannot access ft::vector outside of this->size()"));
 					return (this->_array[n]);
 				}
 
 				const_reference	at(size_type n) const
 				{
 					if (n >= this->size())
-						throw (std::out_of_range("cannot create ft::vector larger than max_size()"));
+						throw (std::out_of_range("cannot access ft::vector outside of this->size()"));
 					return (this->_array[n]);
 				}
 
@@ -408,15 +383,15 @@ namespace ft
 				void	insert(iterator position, size_type n, const_reference val)
 				{
 					size_type	diff = this->_distance(this->begin(), position);
-					size_type	old_end = _get_n(end() - 1);
+					size_type	old_end = this->_get_n(this->end() - 1);
 
 					resize(_size + n);
-					for (iterator it = end() - 1; it >= begin() + diff + n; --it)
+					for (iterator it = this->end() - 1; it >= this->begin() + diff + n; --it)
 					{
 						*it = this->_array[old_end];
 						--old_end;
 					}
-					for (iterator it = begin() + diff; it != begin() + (diff + n); ++it)
+					for (iterator it = this->begin() + diff; it != this->begin() + (diff + n); ++it)
 						*it = val;
 				}
 
@@ -516,7 +491,7 @@ namespace ft
 					this->_size = 0;
 				}
 
-			// ##### Getter for the allocator #####
+			// ##### Getter for the Allocator #####
 
 				allocator_type get_allocator() const
 				{
@@ -529,41 +504,41 @@ namespace ft
 	// ##### Relational opperator overloads #####
 
 	template< class T, class Alloc >
-		bool	operator==(const ft::vector<T, Alloc>& lhs, const ft::vector<T, Alloc>& rhs)
+		bool	operator==(const ft::vector<T, Alloc>& x, const ft::vector<T, Alloc>& y)
 		{
-			if (lhs.size() != rhs.size())
+			if (x.size() != y.size())
 				return (false);
-			return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+			return (ft::equal(x.begin(), x.end(), y.begin()));
 		}
 
 	template< class T, class Alloc >
-		bool	operator!=(const ft::vector<T, Alloc>& lhs, const ft::vector<T, Alloc>& rhs)
+		bool	operator!=(const ft::vector<T, Alloc>& x, const ft::vector<T, Alloc>& y)
 		{
-			return (!(lhs == rhs));
+			return (!(x == y));
 		}
 
 	template< class T, class Alloc >
-		bool	operator<(const ft::vector<T, Alloc>& lhs, const ft::vector<T, Alloc>& rhs)
+		bool	operator<(const ft::vector<T, Alloc>& x, const ft::vector<T, Alloc>& y)
 		{
-			return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+			return (ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end()));
 		}
 
 	template< class T, class Alloc >
-		bool	operator<=(const ft::vector<T, Alloc>& lhs, const ft::vector<T, Alloc>& rhs)
+		bool	operator<=(const ft::vector<T, Alloc>& x, const ft::vector<T, Alloc>& y)
 		{
-			return (!(rhs < lhs));
+			return (!(y < x));
 		}
 
 	template< class T, class Alloc >
-		bool	operator>(const ft::vector<T, Alloc>& lhs, const ft::vector<T, Alloc>& rhs)
+		bool	operator>(const ft::vector<T, Alloc>& x, const ft::vector<T, Alloc>& y)
 		{
-			return (rhs < lhs);
+			return (y < x);
 		}
 
 	template< class T, class Alloc >
-		bool	operator>=(const ft::vector<T, Alloc>& lhs, const ft::vector<T, Alloc>& rhs)
+		bool	operator>=(const ft::vector<T, Alloc>& x, const ft::vector<T, Alloc>& y)
 		{
-			return (!(rhs > lhs));
+			return (!(y > x));
 		}
 
 	// ##### functional template of the swap function #####

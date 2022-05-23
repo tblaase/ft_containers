@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/19 17:51:07 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/23 16:46:54 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,15 +242,28 @@ int main()
 		// std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
 		TESTED_NAMESPACE::map<int, int> *map_1 = new TESTED_NAMESPACE::map<int, int>;
-		std::cout << "inserting " << test_val / 10 << " elements" << std::endl;
-		for (size_t i = 0; i < test_val / 10; ++i)
+		std::cout << "\tinserting " << test_val / 100 << " elements" << std::endl;
+		for (size_t i = 0; i < test_val / 100; ++i)
 		{
-			map_1->insert(TESTED_NAMESPACE::make_pair(i, i));
+			map_1->insert(TESTED_NAMESPACE::make_pair(i, i + 1));
 		}
-		std::cout << "map size: " << map_1->size() << std::endl;
-		std::cout << "clearing map" << std::endl;
+		std::cout << "\tmap size: " << map_1->size() << std::endl;
+
+		std::cout << "\titerating over map using the iterator" << std::endl;
+		TESTED_NAMESPACE::map<int, int>::const_iterator it = map_1->begin();
+		for (size_t i = 0; i < 15; ++i)
+		{
+			std::cout << "key: " << it->first << "\tvalue: " << it->second << std::endl;
+			++it;
+		}
+		std::cout << "\toutput for adding a duplicate element: " << map_1->insert(TESTED_NAMESPACE::make_pair(0, 55)).second << std::endl;
+		std::cout << "\tthe insertion of duplicate elements should not change the value of the key:" << std::endl;
+		it = map_1->begin();
+		std::cout << "\tkey: " << it->first << "\tvalue: " << it->second << std::endl;
+		std::cout << "\tmap size: " << map_1->size() << std::endl;
+		std::cout << "\tclearing map" << std::endl;
 		map_1->clear();
-		std::cout << "map size: " << map_1->size();
+		std::cout << "\tmap size: " << map_1->size();
 		delete map_1;
 		map_1 = NULL;
 		gettimeofday(&end, NULL);

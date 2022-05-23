@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/24 12:02:50 by tblaase           #+#    #+#             */
-/*   Updated: 2022/04/29 11:39:19 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/23 15:41:58 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,11 @@ namespace ft
 		};
 
 	// Iterator tags
-	struct input_iterator_tag
-	{};
-	struct output_iterator_tag
-	{};
-	struct forward_iterator_tag: public input_iterator_tag
-	{};
-	struct bidirectional_iterator_tag: public forward_iterator_tag
-	{};
-	struct random_access_iterator_tag: public bidirectional_iterator_tag
-	{};
+	struct input_iterator_tag												{};
+	struct output_iterator_tag												{};
+	struct forward_iterator_tag: public input_iterator_tag					{};
+	struct bidirectional_iterator_tag: public forward_iterator_tag			{};
+	struct random_access_iterator_tag: public bidirectional_iterator_tag	{};
 
 	template < class Iterator >
 		struct iterator_traits
@@ -54,8 +49,8 @@ namespace ft
 		struct iterator_traits<T*>
 		{
 			typedef T							value_type;
-			typedef value_type					*pointer;
-			typedef value_type					&reference;
+			typedef value_type*					pointer;
+			typedef value_type&					reference;
 			typedef ptrdiff_t					difference_type;
 			typedef random_access_iterator_tag	iterator_category;
 		};

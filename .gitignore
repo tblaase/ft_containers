@@ -70,5 +70,6 @@ dkms.conf
 *.log
 
 #ignore tester
+containers_test
 containers_test_repo
-# tester_utils
+tester_utils

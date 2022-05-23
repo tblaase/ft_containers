@@ -13,17 +13,16 @@
 #pragma once
 
 #include "iterator.hpp"
-#include <iterator>
+// #include <iterator>
 
 namespace ft
 {
 	template <class Iter>
-	class rev_random_access_iterator
-		: public iterator <	typename iterator_traits<Iter>::iterator_category,
-							typename iterator_traits<Iter>::value_type,
-							typename iterator_traits<Iter>::difference_type,
-							typename iterator_traits<Iter>::pointer,
-							typename iterator_traits<Iter>::reference >
+	class rev_random_access_iterator: public iterator <typename iterator_traits<Iter>::iterator_category,
+														typename iterator_traits<Iter>::value_type,
+														typename iterator_traits<Iter>::difference_type,
+														typename iterator_traits<Iter>::pointer,
+														typename iterator_traits<Iter>::reference>
 	{
 		public:
 			typedef Iter															iterator_type;
@@ -54,9 +53,9 @@ namespace ft
 
 			// assigation operator overload
 			template <class It>
-				rev_random_access_iterator	&operator=(const rev_random_access_iterator<It>& other)
+				rev_random_access_iterator	&operator=(const rev_random_access_iterator<It>& src)
 				{
-					this->_current = other.base();
+					this->_current = src.base();
 					return (*this);
 				}
 

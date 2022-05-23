@@ -15,13 +15,13 @@
 #include <algorithm>
 
 #include "bidirectional_iterator.hpp"
-// #include "rev_bidirectional_iterator.hpp"
-#include "reverse_iterator.hpp"
+#include "rev_bidirectional_iterator.hpp"
 
 # define RED 1
 # define BLACK 0
 
 namespace ft {
+// a single node used by map to create a tree from
 	template <class T>
 	class Node
 	{
@@ -57,12 +57,13 @@ namespace ft {
 			{
 				if (parent == NULL)
 					return (NULL);
-				else if (parent->is_left)
-					return (parent->parent->right);
+				else if (this->parent->is_left)
+					return (this->parent->parent->right);
 				else
-					return (parent->parent->left);
+					return (this->parent->parent->left);
 			}
 	};
+// the red-black-tree itself
 
 	template <class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<Node<T> > >
 	class red_black_tree
@@ -89,68 +90,80 @@ namespace ft {
 			allocator_type	_alloc;
 
 		public:
+		// empty constructor
 			explicit red_black_tree(const key_compare& cmp, const allocator_type& alloc = allocator_type()): _root(NULL), _size(0), _cmp(cmp), _alloc(alloc)
 			{
-				_end = _create_node(value_type());
-				_end->left = NULL;
-				_end->right = NULL;
-				_end->parent = NULL;
-				_end->is_left = 0;
-				_end->color = 0;
+				this->_end = this->_create_node(value_type());
+				this->_end->left = NULL;
+				this->_end->right = NULL;
+				this->_end->parent = NULL;
+				this->_end->is_left = 0;
+				this->_end->color = 0;
 			}
-			red_black_tree(const red_black_tree& src): _end(NULL), _root(NULL), _cmp(src._cmp), _alloc(src._alloc) { *this = src; }
+		// copy constructor
+			red_black_tree(const red_black_tree& src): _end(NULL), _root(NULL), _cmp(src._cmp), _alloc(src._alloc)
+			{
+				*this = src;
+			}
 
+		// assignation operator overload
 			red_black_tree&	operator=(const red_black_tree& src)
 			{
-				clear();
+				this->clear();
 				this->_cmp = src._cmp;
 				this->_alloc = src._alloc;
-				_cut_end_connections();
-				_copy(src._root, src._end);
+				this->_cut_end_connections();
+				this->_copy(src._root, src._end);
 
 				return (*this);
 			}
 
+		// destructor
 			~red_black_tree()
 			{
-				clear();
-				_alloc.destroy(_end);
-				_alloc.deallocate(_end, 1);
-				_end = NULL;
+				this->clear();
+				this->_alloc.destroy(this->_end);
+				this->_alloc.deallocate(this->_end, 1);
+				this->_end = NULL;
 			}
 
 			size_type	size() const
 			{
-				return (_size);
+				return (this->_size);
 			}
 
-			node_ptr	get_end() const { return(_end); }
+			node_ptr	get_end() const
+			{
+				return(this->_end);
+			}
 
 			void		clear()
 			{
-				_cut_end_connections();
-				_clear(_root);
-				_size = 0;
-				_root = NULL;
+				this->_cut_end_connections();
+				this->_clear(this->_root);
+				this->_size = 0;
+				this->_root = NULL;
 			}
 
 			node_ptr	find(value_type key) const
 			{
 				node_ptr	node;
 
-				node = _find(_root, key);
+				node = this->_find(this->_root, key);
 				if (!node)
-					return (_end);
+					return (this->_end);
 				return(node);
 			}
+
 			node_ptr	exist(value_type key) const
 			{
 				node_ptr	node;
 
-				node = _find(_root, key);
+				node = this->_find(this->_root, key);
 				return(node);
 			}
-			void		swap(red_black_tree& src)
+
+			void	swap(red_black_tree& src)
 			{
 				node_ptr		_end_tmp = this->_end;
 				node_ptr		_root_tmp = this->_root;
@@ -169,145 +182,157 @@ namespace ft {
 				src._cmp = _cmp_tmp;
 				src._alloc = _alloc_tmp;
 			}
+
 			node_ptr	get_lowest() const
 			{
-				node_ptr	res = _root;
+				node_ptr	res = this->_root;
 
 				if (!res)
-					return (_end);
+					return (this->_end);
 				while (res->left)
 					res = res->left;
 				return (res);
 			}
+
 			node_ptr	get_biggest() const
 			{
-				node_ptr	res = _root;
+				node_ptr	res = this->_root;
 
 				if (!res)
 					return (NULL);
-				while (res->right && res->right != _end)
+				while (res->right && res->right != this->_end)
 					res = res->right;
 				return (res);
 			}
+
 			ft::pair<node_ptr, bool>	insert(value_type value)
 			{
 				node_ptr					exists;
 				node_ptr					new_node;
 				ft::pair<node_ptr, bool>	res;
 
-				exists = exist(value);
+				exists = this->exist(value);
 				if (exists)
 				 	return (ft::make_pair(exists, false));
-				new_node = _create_node(value);
-				if (!_root)
+				new_node = this->_create_node(value);
+				if (!this->_root)
 				{
-					_root = new_node;
-					_root->color = BLACK;
-					++_size;
-					_connect_end();
+					this->_root = new_node;
+					this->_root->color = BLACK;
+					++this->_size;
+					this->_connect_end();
 					return (ft::make_pair(new_node, true));
 				}
-				_cut_end_connections();
-				res = _insert(_root, new_node);
-				++_size;
-				_connect_end();
+				this->_cut_end_connections();
+				res = this->_insert(this->_root, new_node);
+				++this->_size;
+				this->_connect_end();
 				return (res);
 			}
-			void		erase(value_type key)
+
+			void	erase(value_type key)
 			{
 				node_ptr	node_to_delete;
 
-				node_to_delete = exist(key);
+				node_to_delete = this->exist(key);
 				if (!node_to_delete)
 					return ;
-				else if (_size == 1)
-					_root = NULL;
+				else if (this->_size == 1)
+					this->_root = NULL;
 				else
 				{
-					_cut_end_connections();
-					_erase(node_to_delete);
+					this->_cut_end_connections();
+					this->_erase(node_to_delete);
 				}
-				_alloc.destroy(node_to_delete);
-				_alloc.deallocate(node_to_delete, 1);
-				_size--;
-				_connect_end();
+				this->_alloc.destroy(node_to_delete);
+				this->_alloc.deallocate(node_to_delete, 1);
+				--this->_size;
+				this->_connect_end();
 			}
+
+	// private helper functions
 		private:
 			node_ptr	_create_node(value_type value)
 			{
 				node_ptr	new_node;
 
-				new_node = _alloc.allocate(1);
-				_alloc.construct(new_node, value);
+				new_node = this->_alloc.allocate(1);
+				this->_alloc.construct(new_node, value);
 
 				return (new_node);
 			}
-			void		_clear(node_ptr node_to_delete)
+
+			void	_clear(node_ptr node_to_delete)
 			{
 				if (!node_to_delete)
 					return ;
 				if (node_to_delete->left)
-					_clear(node_to_delete->left);
+					this->_clear(node_to_delete->left);
 				if (node_to_delete->right)
-					_clear(node_to_delete->right);
-				_alloc.destroy(node_to_delete);
-				_alloc.deallocate(node_to_delete, 1);
+					this->_clear(node_to_delete->right);
+				this->_alloc.destroy(node_to_delete);
+				this->_alloc.deallocate(node_to_delete, 1);
 				node_to_delete = NULL;
 			}
-			void 		_copy(node_ptr copy, node_ptr copy_end)
+
+			void	_copy(node_ptr copy, node_ptr copy_end)
 			{
 				if (!copy || copy == copy_end)
 					return ;
 				if (copy->left)
-					_copy(copy->left, copy_end);
+					this->_copy(copy->left, copy_end);
 				if (copy->right)
-					_copy(copy->right, copy_end);
-				insert(copy->value);
+					this->_copy(copy->right, copy_end);
+				this->insert(copy->value);
 			}
+
 			node_ptr	_find(node_ptr node, value_type key) const
 			{
 				if (!node)
 					return (NULL);
-				else if (_cmp(key, node->value) && !_cmp(node->value, key))
-					return (_find(node->left, key));
-				else if (!_cmp(key, node->value) && _cmp(node->value, key))
-					return (_find(node->right, key));
+				else if (_cmp(key, node->value) && !this->_cmp(node->value, key))
+					return (this->_find(node->left, key));
+				else if (!_cmp(key, node->value) && this->_cmp(node->value, key))
+					return (this->_find(node->right, key));
 				return (node);
 			}
-			void 		_cut_end_connections()
+
+			void	_cut_end_connections()
 			{
 				node_ptr	biggest;
 
-				biggest = get_biggest();
+				biggest = this->get_biggest();
 				if (biggest)
 					biggest->right = NULL;
-				if (_end)
-					_end->parent = NULL;
+				if (this->_end)
+					this->_end->parent = NULL;
 			}
-			void 		_connect_end()
+
+			void	_connect_end()
 			{
 				node_ptr	biggest;
 
 				biggest = get_biggest();
 				if (biggest)
-					biggest->right = _end;
-				if (!_end)
-					_end = _create_node(value_type());
-				_end->parent = biggest;
+					biggest->right = this->_end;
+				if (!this->_end)
+					this->_end = this->_create_node(value_type());
+				this->_end->parent = biggest;
 			}
-/* ================================================================ */
-/* ============================ Rotations ========================= */
-/* ================================================================ */
+
+		// all the possible rotations of the tree
 			void	_left_right_rotation(node_ptr imbalanced_node)
 			{
-				_left_rotation(imbalanced_node->left);
-				_right_rotation(imbalanced_node);
+				this->_left_rotation(imbalanced_node->left);
+				this->_right_rotation(imbalanced_node);
 			}
+
 			void	_right_left_rotation(node_ptr imbalanced_node)
 			{
-				_right_rotation(imbalanced_node->right);
-				_left_rotation(imbalanced_node);
+				this->_right_rotation(imbalanced_node->right);
+				this->_left_rotation(imbalanced_node);
 			}
+
 			void	_left_rotation(node_ptr imbalanced_node)
 			{
 				node_ptr	tmp;
@@ -321,7 +346,7 @@ namespace ft {
 				}
 				if (!imbalanced_node->parent)
 				{
-					_root = tmp;
+					this->_root = tmp;
 					tmp->parent = NULL;
 				}
 				else
@@ -342,6 +367,7 @@ namespace ft {
 				imbalanced_node->is_left = 1;
 				imbalanced_node->parent = tmp;
 			}
+
 			void	_right_rotation(node_ptr imbalanced_node)
 			{
 				node_ptr	tmp;
@@ -355,7 +381,7 @@ namespace ft {
 				}
 				if (!imbalanced_node->parent)
 				{
-					_root = tmp;
+					this->_root = tmp;
 					tmp->parent = NULL;
 				}
 				else
@@ -376,11 +402,12 @@ namespace ft {
 				imbalanced_node->is_left = 0;
 				imbalanced_node->parent = tmp;
 			}
+
 			void	_rotate(node_ptr imbalanced_node)
 			{
 				if (imbalanced_node->is_left && imbalanced_node->parent->is_left)
 				{
-					_right_rotation(imbalanced_node->parent->parent);
+					this->_right_rotation(imbalanced_node->parent->parent);
 					imbalanced_node->color = RED;
 					imbalanced_node->parent->color = BLACK;
 					if (imbalanced_node->parent->right)
@@ -388,7 +415,7 @@ namespace ft {
 				}
 				else if (!imbalanced_node->is_left && !imbalanced_node->parent->is_left)
 				{
-					_left_rotation(imbalanced_node->parent->parent);
+					this->_left_rotation(imbalanced_node->parent->parent);
 					imbalanced_node->color = RED;
 					imbalanced_node->parent->color = BLACK;
 					if (imbalanced_node->parent->left)
@@ -396,28 +423,28 @@ namespace ft {
 				}
 				else if (!imbalanced_node->is_left && imbalanced_node->parent->is_left)
 				{
-					_left_right_rotation(imbalanced_node->parent->parent);
+					this->_left_right_rotation(imbalanced_node->parent->parent);
 					imbalanced_node->color = BLACK;
 					imbalanced_node->right->color = RED;
 					imbalanced_node->left->color = RED;
 				}
 				else
 				{
-					_right_left_rotation(imbalanced_node->parent->parent);
+					this->_right_left_rotation(imbalanced_node->parent->parent);
 					imbalanced_node->color = BLACK;
 					imbalanced_node->right->color = RED;
 					imbalanced_node->left->color = RED;
 				}
 			}
-/* ================================================================ */
-/* ============================ Insert ============================ */
-/* ================================================================ */
+
+		// insert helpers
 			void	_color_flip(node_ptr imbalanced_node)
 			{
 				imbalanced_node->parent->color = BLACK;
 				imbalanced_node->parent->parent->color = RED;
 				imbalanced_node->get_aunt()->color = BLACK;
 			}
+
 			void	_check_color(node_ptr new_node)
 			{
 				if (!new_node)
@@ -428,16 +455,18 @@ namespace ft {
 					return ;
 				}
 				if (new_node->color == RED && new_node->parent->color == RED)
-					_insert_balance(new_node);
-				_check_color(new_node->parent);
+					this->_insert_balance(new_node);
+				this->_check_color(new_node->parent);
 			}
+
 			void	_insert_balance(node_ptr imbalanced_node)
 			{
 				if (imbalanced_node->get_aunt() && imbalanced_node->get_aunt()->color == RED)
-					_color_flip(imbalanced_node);
+					this->_color_flip(imbalanced_node);
 				else
-					_rotate(imbalanced_node);
+					this->_rotate(imbalanced_node);
 			}
+
 			ft::pair<node_ptr, bool>	_insert(node_ptr parent, node_ptr new_node)
 			{
 				if (_cmp(parent->value, new_node->value))
@@ -449,7 +478,7 @@ namespace ft {
 						new_node->is_left = 0;
 					}
 					else
-						_insert(parent->right, new_node);
+						this->_insert(parent->right, new_node);
 				}
 				else
 				{
@@ -460,14 +489,12 @@ namespace ft {
 						new_node->is_left = 1;
 					}
 					else
-						_insert(parent->left, new_node);
+						this->_insert(parent->left, new_node);
 				}
-				_check_color(new_node);
+				this->_check_color(new_node);
 				return (ft::make_pair(new_node, true));
 			}
-/* ================================================================ */
-/* ============================= Erase ============================ */
-/* ================================================================ */
+		// erase helpers
 			void		_assign(node_ptr parent, node_ptr to, bool is_left)
 			{
 				if (is_left)
@@ -477,25 +504,27 @@ namespace ft {
 				if (to)
 					to->is_left = is_left;
 			}
+
 			node_ptr	_replace(node_ptr node_to_delete, node_ptr replacement)
 			{
 				if (node_to_delete == _root)
 				{
-					_root = replacement;
-					_root->parent = NULL;
-					_root->color = BLACK;
+					this->_root = replacement;
+					this->_root->parent = NULL;
+					this->_root->color = BLACK;
 				}
 				else
 				{
 					if (node_to_delete->is_left)
-						_assign(node_to_delete->parent, replacement, 1);
+						this->_assign(node_to_delete->parent, replacement, 1);
 					else
-						_assign(node_to_delete->parent, replacement, 0);
+						this->_assign(node_to_delete->parent, replacement, 0);
 					if (replacement && replacement->parent)
 						replacement->parent = node_to_delete->parent;
 				}
 				return (replacement);
 			}
+
 			node_ptr	_get_successor(node_ptr node)
 			{
 				node_ptr	res;
@@ -505,22 +534,24 @@ namespace ft {
 					res = res->left;
 				return(res);
 			}
-			void	_fixup_case_1(node_ptr parent, bool is_left)
+
+			void	_fix_case_1(node_ptr parent, bool is_left)
 			{
 				parent->color = RED;
 				if (is_left)
 				{
 					parent->right->color = BLACK;
-					_left_rotation(parent);
+					this->_left_rotation(parent);
 				}
 				else
 				{
 					parent->left->color = BLACK;
-					_right_rotation(parent);
+					this->_right_rotation(parent);
 				}
-				_get_sibling(parent, is_left);
+				this->_get_sibling(parent, is_left);
 			}
-			void	_fixup_case_2(node_ptr parent, bool is_left)
+
+			void	_fix_case_2(node_ptr parent, bool is_left)
 			{
 				if (is_left)
 					parent->right->color = RED;
@@ -531,27 +562,29 @@ namespace ft {
 				else if (parent->color == BLACK && parent == _root)
 					return ;
 				else
-					_get_sibling(parent->parent, parent->is_left);
+					this->_get_sibling(parent->parent, parent->is_left);
 			}
-			void	_fixup_case_3(node_ptr parent, bool is_left)
+
+			void	_fix_case_3(node_ptr parent, bool is_left)
 			{
 				if (is_left)
 				{
 					if (parent->right->left)
 						parent->right->left->color = BLACK;
 					parent->right->color = RED;
-					_right_rotation(parent->right);
+					this->_right_rotation(parent->right);
 				}
 				else
 				{
 					if (parent->left->right)
 						parent->left->right->color = BLACK;
 					parent->left->color = RED;
-					_left_rotation(parent->left);
+					this->_left_rotation(parent->left);
 				}
-				_fixup_case_4(parent, is_left);
+				this->_fix_case_4(parent, is_left);
 			}
-			void	_fixup_case_4(node_ptr parent, bool is_left)
+
+			void	_fix_case_4(node_ptr parent, bool is_left)
 			{
 				if (is_left)
 				{
@@ -559,7 +592,7 @@ namespace ft {
 					parent->color = BLACK;
 					if (parent->right->right)
 						parent->right->right->color = BLACK;
-					_left_rotation(parent);
+					this->_left_rotation(parent);
 				}
 				else
 				{
@@ -567,38 +600,41 @@ namespace ft {
 					parent->color = BLACK;
 					if (parent->left->left)
 						parent->left->left->color = BLACK;
-					_right_rotation(parent);
+					this->_right_rotation(parent);
 				}
 			}
-			void 	_erase_fixup(node_ptr parent, node_ptr sibling, node_ptr x, bool is_left)
+
+			void	_erase_fix(node_ptr parent, node_ptr sibling, node_ptr x, bool is_left)
 			{
 				if (x && x->color == RED)
 					x->color = BLACK;
 				else if (sibling && sibling->color == RED)
-					_fixup_case_1(parent, is_left);
+					this->_fix_case_1(parent, is_left);
 				else if (sibling && sibling->color == BLACK
 						&& (!sibling->right || (sibling->right && sibling->right->color == BLACK))
 						&& (!sibling->left || (sibling->left && sibling->left->color == BLACK)))
-					_fixup_case_2(parent, is_left);
+					this->_fix_case_2(parent, is_left);
 				else if (sibling && sibling->color == BLACK
 						&& ((is_left && sibling->left && sibling->left->color == RED
 						&& (!sibling->right || (sibling->right && sibling->right->color == BLACK)))
 						|| (!is_left && sibling->right && sibling->right->color == RED
 						&& (!sibling->left || (sibling->left && sibling->left->color == BLACK)))))
-					_fixup_case_3(parent, is_left);
+					this->_fix_case_3(parent, is_left);
 				else if (sibling && sibling->color == BLACK
 						&& ((is_left && sibling->right && sibling->right->color == RED)
 						|| (!is_left && sibling->left && sibling->left->color == RED)))
-					_fixup_case_4(parent, is_left);
+					this->_fix_case_4(parent, is_left);
 			}
-			void		_get_sibling(node_ptr parent, bool is_left)
+
+			void	_get_sibling(node_ptr parent, bool is_left)
 			{
 				if (is_left)
-					_erase_fixup(parent, parent->right, parent->left, is_left);
+					this->_erase_fix(parent, parent->right, parent->left, is_left);
 				else
-					_erase_fixup(parent, parent->left, parent->right, is_left);
+					this->_erase_fix(parent, parent->left, parent->right, is_left);
 			}
-			void		_erase_balance(node_ptr node_to_delete, node_ptr replacement, node_ptr parent, bool is_left)
+
+			void	_erase_balance(node_ptr node_to_delete, node_ptr replacement, node_ptr parent, bool is_left)
 			{
 				node_ptr	x;
 
@@ -612,7 +648,7 @@ namespace ft {
 				else if (node_to_delete->color == RED && replacement && replacement->color == BLACK)
 				{
 					replacement->color = RED;
-					_get_sibling(parent, is_left);
+					this->_get_sibling(parent, is_left);
 				}
 				else if (node_to_delete->color == BLACK && replacement && replacement->color == RED)
 					replacement->color = BLACK;
@@ -621,9 +657,10 @@ namespace ft {
 					return ;
 				else if (node_to_delete->color == BLACK
 						&& (!replacement || (replacement && replacement->color == BLACK)) && x != _root)
-					_get_sibling(parent, is_left);
+					this->_get_sibling(parent, is_left);
 			}
-			void		_child_is_null(node_ptr node_to_delete)
+
+			void	_child_is_null(node_ptr node_to_delete)
 			{
 				bool		is_left;
 				node_ptr	parent;
@@ -632,36 +669,37 @@ namespace ft {
 				parent = NULL;
 				if (!node_to_delete->left && !node_to_delete->right)
 				{
-					replacement = _replace(node_to_delete, NULL);
+					replacement = this->_replace(node_to_delete, NULL);
 					parent = node_to_delete->parent;
 					is_left = node_to_delete->is_left;
 				}
 				else if (!node_to_delete->right)
 				{
-					replacement = _replace(node_to_delete, node_to_delete->left);
+					replacement = this->_replace(node_to_delete, node_to_delete->left);
 					parent = replacement->parent;
 					is_left = 1;
 				}
 				else if (!node_to_delete->left)
 				{
-					replacement = _replace(node_to_delete, node_to_delete->right);
+					replacement = this->_replace(node_to_delete, node_to_delete->right);
 					parent = replacement->parent;
 					is_left = 0;
 				}
 				if (!parent)
 					return ;
-				_erase_balance(node_to_delete, replacement, parent, is_left);
+				this->_erase_balance(node_to_delete, replacement, parent, is_left);
 			}
-			void 		_both_child_exist(node_ptr node_to_delete)
+
+			void 	_both_child_exist(node_ptr node_to_delete)
 			{
 				bool		is_left;
 				node_ptr	parent;
 				node_ptr	replacement;
 
-				replacement = _get_successor(node_to_delete);
+				replacement = this->_get_successor(node_to_delete);
 				if (replacement == node_to_delete->right)
 				{
-					_replace(node_to_delete, replacement);
+					this->_replace(node_to_delete, replacement);
 					replacement->left = node_to_delete->left;
 					replacement->left->parent = replacement;
 					parent = replacement;
@@ -671,21 +709,22 @@ namespace ft {
 				{
 					parent = replacement->parent;
 					is_left = replacement->is_left;
-					_replace(replacement, replacement->right);
-					_replace(node_to_delete, replacement);
+					this->_replace(replacement, replacement->right);
+					this->_replace(node_to_delete, replacement);
 					replacement->left = node_to_delete->left;
 					replacement->right = node_to_delete->right;
 					replacement->left->parent = replacement;
 					replacement->right->parent = replacement;
 				}
-				_erase_balance(node_to_delete, replacement, parent, is_left);
+				this->_erase_balance(node_to_delete, replacement, parent, is_left);
 			}
-			void		_erase(node_ptr node_to_delete)
+
+			void	_erase(node_ptr node_to_delete)
 			{
 				if (!node_to_delete->right || !node_to_delete->left)
-					_child_is_null(node_to_delete);
+					this->_child_is_null(node_to_delete);
 				else
-					_both_child_exist(node_to_delete);
+					this->_both_child_exist(node_to_delete);
 			}
 	};
 }

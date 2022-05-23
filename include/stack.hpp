@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 17:46:26 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/10 08:21:50 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/23 17:05:33 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,63 +33,62 @@ namespace ft
 
 			public:
 				// constructor
-				explicit stack(const container_type& c = container_type()): _c(c)
-				{};
+				explicit stack(const container_type& c = container_type()): _c(c) {}
 
 				// destructor
 				~stack()
 				{
 					this->_c.clear();
-				};
+				}
 
 				// Member functions
-				bool empty() const
+				bool	empty() const
 				{
 					return (this->_c.empty());
 				}
 
-				size_type size() const
+				size_type	size() const
 				{
 					return (this->_c.size());
 				}
 
-				reference top()
+				reference	top()
 				{
 					return (this->_c.back());
 				}
 
-				const_reference top() const
+				const_reference	top() const
 				{
 					return (this->_c.back());
 				}
 
-				void push(const value_type& x)
+				void	push(const value_type& x)
 				{
 					this->_c.push_back(x);
 				}
-				void pop()
+				void	pop()
 				{
 					this->_c.pop_back();
 				}
 
 				// friend declaration
 				template<class FT, class FriendContainer>
-					friend bool	operator==( const ft::stack<FT,FriendContainer> &x, const ft::stack<FT,FriendContainer> &y );
+					friend bool	operator==(const ft::stack<FT,FriendContainer> &x, const ft::stack<FT,FriendContainer> &y);
 
 				template<class FT, class FriendContainer>
-					friend bool	operator!=( const ft::stack<FT,FriendContainer> &x, const ft::stack<FT,FriendContainer> &y );
+					friend bool	operator!=(const ft::stack<FT,FriendContainer> &x, const ft::stack<FT,FriendContainer> &y);
 
 				template<class FT, class FriendContainer>
-					friend bool	operator<( const ft::stack<FT,FriendContainer> &x, const ft::stack<FT,FriendContainer> &y );
+					friend bool	operator<(const ft::stack<FT,FriendContainer> &x, const ft::stack<FT,FriendContainer> &y);
 
 				template<class FT, class FriendContainer>
-					friend bool	operator<=( const ft::stack<FT,FriendContainer> &x, const ft::stack<FT,FriendContainer> &y );
+					friend bool	operator<=(const ft::stack<FT,FriendContainer> &x, const ft::stack<FT,FriendContainer> &y);
 
 				template<class FT, class FriendContainer>
-					friend bool	operator>( const ft::stack<FT,FriendContainer> &x, const ft::stack<FT,FriendContainer> &y );
+					friend bool	operator>(const ft::stack<FT,FriendContainer> &x, const ft::stack<FT,FriendContainer> &y);
 
 				template<class FT, class FriendContainer>
-					friend bool	operator>=( const ft::stack<FT,FriendContainer> &x, const ft::stack<FT,FriendContainer> &y );
+					friend bool	operator>=(const ft::stack<FT,FriendContainer> &x, const ft::stack<FT,FriendContainer> &y);
 };
 
 	// non-member functions

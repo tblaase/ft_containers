@@ -5,138 +5,110 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/12 09:47:26 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/23 14:50:09 by tblaase          ###   ########.fr       */
+/*   Created: 2022/05/20 11:19:59 by tblaase           #+#    #+#             */
+/*   Updated: 2022/05/23 17:38:44 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "iterator.hpp"
+# include "iterator.hpp"
+// # include <iterator>
 
 namespace ft
 {
-	template <class Node>
-		class rev_bidirectional_iterator: public ft::iterator<bidirectional_iterator_tag, Node>
-		{
-			public:
-			typedef Node*								iterator_type;
-			typedef Node								iterator_value;
-			typedef typename iterator_value::value_type	value_type;
-			typedef value_type&							reference;
-			typedef value_type*							pointer;
-
-		private:
-			iterator_type	_ptr;
-
-			iterator_type	_get_successor(iterator_type node)
-			{
-				iterator_type	res;
-
-				if (!node)
-					return (NULL);
-				if (node->right)
-				{
-					res = node->right;
-					while (res->left)
-						res = res->left;
-				}
-				else
-				{
-					res = node->parent;
-					while (res && !node->is_left)
-					{
-						node = res;
-						res = res->parent;
-					}
-				}
-				return(res);
-			}
-			iterator_type	_get_predecessor(iterator_type node)
-			{
-				iterator_type	res;
-
-				if (!node)
-					return (NULL);
-				if (node->left)
-				{
-					res = node->left;
-					while (res->right)
-						res = res->right;
-				}
-				else
-				{
-					res = node->parent;
-					while (res && node->is_left)
-					{
-						node = res;
-						res = res->parent;
-					}
-				}
-				return(res);
-			}
+	template <class Iter>
+	class reverse_iterator: public iterator <typename iterator_traits<Iter>::iterator_category,
+											typename iterator_traits<Iter>::value_type,
+											typename iterator_traits<Iter>::difference_type,
+											typename iterator_traits<Iter>::pointer,
+											typename iterator_traits<Iter>::reference>
+	{
+	// member types
 		public:
-			explicit rev_bidirectional_iterator(iterator_type ptr = NULL): _ptr(ptr) { }
-			rev_bidirectional_iterator(const rev_bidirectional_iterator& src) { *this = src; }
-			~rev_bidirectional_iterator() { }
-
-			template<class Iter>
-				rev_bidirectional_iterator&	operator=(const Iter& src)
+			typedef Iter															iterator_type;
+			typedef typename ft::iterator_traits<iterator_type>::reference			reference;
+			typedef typename ft::iterator_traits<iterator_type>::pointer			pointer;
+			typedef typename ft::iterator_traits<iterator_type>::difference_type	difference_type;
+		protected:
+			iterator_type	_it;
+	// member functions
+		public:
+		// default constructor
+			reverse_iterator(): _it() {}
+		// constructor
+			explicit reverse_iterator(iterator_type it): _it(it) {}
+		// copy constructor
+			template <class It>
+				reverse_iterator(const reverse_iterator<It>& src)
 				{
-					if (this != src)
-						_ptr = src.base();
+					*this = src;
+				}
+
+		// destructor
+			~reverse_iterator() {}
+
+		// assignations operator overload
+			template <class It>
+				reverse_iterator&	operator=(const reverse_iterator<It>& src)
+				{
+					this->_it = src.base();
 					return (*this);
 				}
 
-			iterator_type	base()
+		// member functions
+			iterator_type	base() const
 			{
-				return (_ptr);
+				return (this->_it);
 			}
-			// iterator_type	base() const
-			// {
-			// 	return (_ptr);
-			// }
+
+		// operator overloads
+			pointer	operator->() const
+			{
+				return (&(this->operator*()));
+			}
 
 			reference	operator*() const
 			{
-				return (_ptr->value);
-			}
-			pointer		operator->() const
-			{
-				return (&(_ptr->value));
+				iterator_type	tmp = this->_it;
+				return (*--tmp);
 			}
 
-			rev_bidirectional_iterator&	operator++()
+			reverse_iterator&	operator++()
 			{
-				_ptr = _get_successor(_ptr);
+				--this->_it;
 				return (*this);
 			}
-			rev_bidirectional_iterator		operator++(int)
+
+			reverse_iterator	operator++(int)
 			{
-				rev_bidirectional_iterator	tmp(*this);
-				++*this;
+				reverse_iterator	tmp(*this);
+				--this->_it;
 				return (tmp);
 			}
 
-			rev_bidirectional_iterator&	operator--()
+			reverse_iterator&	operator--()
 			{
-				_ptr = _get_predecessor(_ptr);
+				++this->_it;
 				return (*this);
 			}
-			rev_bidirectional_iterator		operator--(int)
+
+			reverse_iterator	operator--(int)
 			{
-				rev_bidirectional_iterator	tmp(*this);
-				--*this;
+				reverse_iterator	tmp(*this);
+				++this->_it;
 				return (tmp);
 			}
-
-			bool	operator==(const rev_bidirectional_iterator &rhs)
-			{
-				return (_ptr == rhs._ptr);
-			}
-			bool	operator!=(const rev_bidirectional_iterator &rhs)
-			{
-				return (_ptr != rhs._ptr);
-			}
-		};
+	};
+// non member operator overloads
+	template <class iter1, class iter2>
+		bool operator==(const ft::reverse_iterator<iter1>& x, const ft::reverse_iterator<iter2>& y)
+		{
+			return (x.base() == y.base());
+		}
+	template <class iter1, class iter2>
+		bool operator!=(const ft::reverse_iterator<iter1>& x, const ft::reverse_iterator<iter2>& y)
+		{
+			return (x.base() != y.base());
+		}
 }
