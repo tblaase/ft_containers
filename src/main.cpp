@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/24 18:29:00 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/24 18:55:57 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,7 +243,7 @@ int main()
 		// std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
 		TESTED_NAMESPACE::map<int, int> *map_1 = new TESTED_NAMESPACE::map<int, int>;
-		std::cout << "\tinserting " << test_val / 100 << " elements" << std::endl;
+		std::cout << "\tinserting " << test_val / 100 << " elements into map_1" << std::endl;
 		for (size_t i = 0; i < test_val / 100; ++i)
 		{
 			map_1->insert(TESTED_NAMESPACE::make_pair(i, i + 1));
@@ -258,16 +258,39 @@ int main()
 			std::cout << "key: " << it->first << "\tvalue: " << it->second << std::endl;
 			++it;
 		}
-		std::cout << "\toutput for adding a duplicate element: " << map_1->insert(TESTED_NAMESPACE::make_pair(0, 55)).second << std::endl;
+		std::cout << "\toutput for adding `make_pair(0, 55)`, a duplicate element(this output is a bool): " << map_1->insert(TESTED_NAMESPACE::make_pair(0, 55)).second << std::endl;
 		std::cout << "\tthe insertion of duplicate elements should not change the value of the key:" << std::endl;
 		it = map_1->begin();
 		std::cout << "\tkey: " << it->first << "\tvalue: " << it->second << std::endl;
 		std::cout << "\tmap size: " << map_1->size() << std::endl;
-		std::cout << "\tclearing map" << std::endl;
-		map_1->clear();
-		std::cout << "\tmap size: " << map_1->size();
+		std::cout << "\tthe deletion of the elements is now up to the destructor" << std::endl;
 		delete map_1;
 		map_1 = NULL;
+
+		TESTED_NAMESPACE::map<int, int> map_2;
+		std::cout << "\tinserting " << test_val / 100 << " elements into map_2" << std::endl;
+		for (size_t i = 0; i < test_val / 100; ++i)
+		{
+			map_2.insert(TESTED_NAMESPACE::make_pair(i, i + 1));
+		}
+		std::cout << "\tmax_size: " << map_2.max_size() << std::endl;
+		std::cout << "\tmap size: " << map_2.size() << std::endl;
+
+		std::cout << "\titerating over map using the iterator" << std::endl;
+		TESTED_NAMESPACE::map<int, int>::const_iterator it_2 = map_2.begin();
+		for (size_t i = 0; i < 15 && it_2 != map_2.end(); ++i)
+		{
+			std::cout << "\tkey: " << it_2->first << "\tvalue: " << it_2->second << std::endl;
+			++it_2;
+		}
+		std::cout << "\toutput for adding `make_pair(0, 55)`, a duplicate element(this output is a bool): " << map_2.insert(TESTED_NAMESPACE::make_pair(0, 55)).second << std::endl;
+		std::cout << "\tthe insertion of duplicate elements should not change the value of the key" << std::endl;
+		it_2 = map_2.begin();
+		std::cout << "\tkey: " << it_2->first << "\tvalue: " << it_2->second << std::endl;
+		std::cout << "\tmap size: " << map_2.size() << std::endl;
+		std::cout << "\tclearing map_2" << std::endl;
+		map_2.clear();
+		std::cout << "\tmap size: " << map_2.size();
 		gettimeofday(&end, NULL);
 		// end = std::chrono::steady_clock::now();
 
