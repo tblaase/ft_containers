@@ -53,7 +53,7 @@ namespace ft {
 				return (*this);
 			}
 
-			node_ptr	get_aunt()
+			node_ptr	get_uncle()
 			{
 				if (parent == NULL)
 					return (NULL);
@@ -64,6 +64,40 @@ namespace ft {
 			}
 	};
 // the red-black-tree itself
+
+// RED BLACK TREE RULES
+
+// 	1. Every node is red or black
+// 	2. Root is always black
+// 	3. New insertions are always red
+// 	4. Every path from root - leaf(NULL) has the same number of BLACK nodes
+// 	5. No path can have two consecutice RED nodes
+// 	6. NULLs are black
+// 	7. Every node has two children
+
+// Example tree to understand the child - parent - uncle relationship
+//
+// 				_root
+// 			/			\.
+// 		left			right
+// 		/	\			/	\.
+//	l1		r1		l2		r2
+//
+// root has two children: left and right
+// the parent of l1 and r1 is left
+// the uncle of l1 and r1 is right
+
+
+// 		Rules for fixing an invalid red-black-tree
+
+// 1. If we have BLACK uncle - rotate
+// 	- if imbalance is in right child and right subtree - left rotation
+// 	- if imbalance is in right child and left subtree - right/left rotation
+// 	- if imbalance is in left child and right subtree - left/right rotation
+// 	- if imbalance is in left child and left subtree - right rotation
+// 2. If we have RED uncle - color flip
+// 3. After rotation working nodes should look like: parent - black, childrens - red
+// 4. After color flip working nodes should look like: parent - red, childrens - black
 
 	template <class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<Node<T> > >
 	class red_black_tree
@@ -89,162 +123,7 @@ namespace ft {
 			key_compare		_cmp;
 			allocator_type	_alloc;
 
-		public:
-		// empty constructor
-			explicit red_black_tree(const key_compare& cmp, const allocator_type& alloc = allocator_type()): _root(NULL), _size(0), _cmp(cmp), _alloc(alloc)
-			{
-				this->_end = this->_create_node(value_type());
-				this->_end->left = NULL;
-				this->_end->right = NULL;
-				this->_end->parent = NULL;
-				this->_end->is_left = 0;
-				this->_end->color = 0;
-			}
-		// copy constructor
-			red_black_tree(const red_black_tree& src): _end(NULL), _root(NULL), _cmp(src._cmp), _alloc(src._alloc)
-			{
-				*this = src;
-			}
-
-		// assignation operator overload
-			red_black_tree&	operator=(const red_black_tree& src)
-			{
-				this->clear();
-				this->_cmp = src._cmp;
-				this->_alloc = src._alloc;
-				this->_cut_end_connections();
-				this->_copy(src._root, src._end);
-
-				return (*this);
-			}
-
-		// destructor
-			~red_black_tree()
-			{
-				this->clear();
-				this->_alloc.destroy(this->_end);
-				this->_alloc.deallocate(this->_end, 1);
-				this->_end = NULL;
-			}
-
-			size_type	size() const
-			{
-				return (this->_size);
-			}
-
-			node_ptr	get_end() const
-			{
-				return(this->_end);
-			}
-
-			void	clear()
-			{
-				this->_cut_end_connections();
-				this->_clear(this->_root);
-				this->_size = 0;
-				this->_root = NULL;
-			}
-
-			node_ptr	find(value_type key) const
-			{
-				node_ptr	node = this->_find(this->_root, key);
-				if (!node)
-					return (this->_end);
-				return(node);
-			}
-
-			node_ptr	exist(value_type key) const
-			{
-				node_ptr	node = this->_find(this->_root, key);
-				return(node);
-			}
-
-			void	swap(red_black_tree& src)
-			{
-				node_ptr		_end_tmp = this->_end;
-				node_ptr		_root_tmp = this->_root;
-				size_type		_size_tmp = this->_size;
-				key_compare		_cmp_tmp = this->_cmp;
-				allocator_type	_alloc_tmp = this->_alloc;
-
-				this->_end = src._end;
-				this->_root = src._root;
-				this->_size = src._size;
-				this->_cmp = src._cmp;
-				this->_alloc = src._alloc;
-				src._end = _end_tmp;
-				src._root = _root_tmp;
-				src._size = _size_tmp;
-				src._cmp = _cmp_tmp;
-				src._alloc = _alloc_tmp;
-			}
-
-			node_ptr	get_lowest() const
-			{
-				node_ptr	res = this->_root;
-
-				if (!res)
-					return (this->_end);
-				while (res->left)
-					res = res->left;
-				return (res);
-			}
-
-			node_ptr	get_biggest() const
-			{
-				node_ptr	res = this->_root;
-
-				if (!res)
-					return (NULL);
-				while (res->right && res->right != this->_end)
-					res = res->right;
-				return (res);
-			}
-
-			ft::pair<node_ptr, bool>	insert(value_type value)
-			{
-				node_ptr					exists = this->exist(value);
-				// node_ptr					new_node;
-				// ft::pair<node_ptr, bool>	res;
-
-				if (exists)
-				 	return (ft::make_pair(exists, false));
-				node_ptr new_node = this->_create_node(value);
-				if (!this->_root)
-				{
-					this->_root = new_node;
-					this->_root->color = BLACK;
-					++this->_size;
-					this->_connect_end();
-					return (ft::make_pair(new_node, true));
-				}
-				this->_cut_end_connections();
-				ft::pair<node_ptr, bool> res = this->_insert(this->_root, new_node);
-				++this->_size;
-				this->_connect_end();
-				return (res);
-			}
-
-			void	erase(value_type key)
-			{
-				node_ptr	node_to_delete = this->exist(key);
-				if (!node_to_delete)
-					return ;
-				else if (this->_size == 1)
-					this->_root = NULL;
-				else
-				{
-					this->_cut_end_connections();
-					this->_erase(node_to_delete);
-				}
-				this->_alloc.destroy(node_to_delete);
-				this->_alloc.deallocate(node_to_delete, 1);
-				--this->_size;
-				this->_connect_end();
-			}
-
-	// private helper functions
-		private:
+		// private helper functions
 			node_ptr	_create_node(value_type value)
 			{
 				node_ptr	new_node = this->_alloc.allocate(1);
@@ -288,7 +167,7 @@ namespace ft {
 				return (node);
 			}
 
-			void	_cut_end_connections()
+			void	_remove_end()
 			{
 				node_ptr	biggest = this->get_biggest();
 				if (biggest)
@@ -308,36 +187,36 @@ namespace ft {
 			}
 
 		// all the possible rotations of the tree
-			void	_left_right_rotation(node_ptr imbalanced_node)
+			void	_left_right_rotation(node_ptr node_to_fix)
 			{
-				this->_left_rotation(imbalanced_node->left);
-				this->_right_rotation(imbalanced_node);
+				this->_left_rotation(node_to_fix->left);
+				this->_right_rotation(node_to_fix);
 			}
 
-			void	_right_left_rotation(node_ptr imbalanced_node)
+			void	_right_left_rotation(node_ptr node_to_fix)
 			{
-				this->_right_rotation(imbalanced_node->right);
-				this->_left_rotation(imbalanced_node);
+				this->_right_rotation(node_to_fix->right);
+				this->_left_rotation(node_to_fix);
 			}
 
-			void	_left_rotation(node_ptr imbalanced_node)
+			void	_left_rotation(node_ptr node_to_fix)
 			{
-				node_ptr	tmp = imbalanced_node->right;
-				imbalanced_node->right = tmp->left;
-				if (imbalanced_node->right)
+				node_ptr	tmp = node_to_fix->right;
+				node_to_fix->right = tmp->left;
+				if (node_to_fix->right)
 				{
-					imbalanced_node->right->parent = imbalanced_node;
-					imbalanced_node->right->is_left = 0;
+					node_to_fix->right->parent = node_to_fix;
+					node_to_fix->right->is_left = 0;
 				}
-				if (!imbalanced_node->parent)
+				if (!node_to_fix->parent)
 				{
 					this->_root = tmp;
 					tmp->parent = NULL;
 				}
 				else
 				{
-					tmp->parent = imbalanced_node->parent;
-					if (imbalanced_node->is_left)
+					tmp->parent = node_to_fix->parent;
+					if (node_to_fix->is_left)
 					{
 						tmp->is_left = 1;
 						tmp->parent->left = tmp;
@@ -348,29 +227,29 @@ namespace ft {
 						tmp->parent->right = tmp;
 					}
 				}
-				tmp->left = imbalanced_node;
-				imbalanced_node->is_left = 1;
-				imbalanced_node->parent = tmp;
+				tmp->left = node_to_fix;
+				node_to_fix->is_left = 1;
+				node_to_fix->parent = tmp;
 			}
 
-			void	_right_rotation(node_ptr imbalanced_node)
+			void	_right_rotation(node_ptr node_to_fix)
 			{
-				node_ptr	tmp = imbalanced_node->left;
-				imbalanced_node->left = tmp->right;
-				if (imbalanced_node->left)
+				node_ptr	tmp = node_to_fix->left;
+				node_to_fix->left = tmp->right;
+				if (node_to_fix->left)
 				{
-					imbalanced_node->left->parent = imbalanced_node;
-					imbalanced_node->left->is_left = 1;
+					node_to_fix->left->parent = node_to_fix;
+					node_to_fix->left->is_left = 1;
 				}
-				if (!imbalanced_node->parent)
+				if (!node_to_fix->parent)
 				{
 					this->_root = tmp;
 					tmp->parent = NULL;
 				}
 				else
 				{
-					tmp->parent = imbalanced_node->parent;
-					if (imbalanced_node->is_left)
+					tmp->parent = node_to_fix->parent;
+					if (node_to_fix->is_left)
 					{
 						tmp->is_left = 1;
 						tmp->parent->left = tmp;
@@ -381,51 +260,51 @@ namespace ft {
 						tmp->parent->right = tmp;
 					}
 				}
-				tmp->right = imbalanced_node;
-				imbalanced_node->is_left = 0;
-				imbalanced_node->parent = tmp;
+				tmp->right = node_to_fix;
+				node_to_fix->is_left = 0;
+				node_to_fix->parent = tmp;
 			}
 
-			void	_rotate(node_ptr imbalanced_node)
+			void	_rotate(node_ptr node_to_fix)
 			{
-				if (imbalanced_node->is_left && imbalanced_node->parent->is_left)
+				if (node_to_fix->is_left && node_to_fix->parent->is_left)
 				{
-					this->_right_rotation(imbalanced_node->parent->parent);
-					imbalanced_node->color = RED;
-					imbalanced_node->parent->color = BLACK;
-					if (imbalanced_node->parent->right)
-						imbalanced_node->parent->right->color = RED;
+					this->_right_rotation(node_to_fix->parent->parent);
+					node_to_fix->color = RED;
+					node_to_fix->parent->color = BLACK;
+					if (node_to_fix->parent->right)
+						node_to_fix->parent->right->color = RED;
 				}
-				else if (!imbalanced_node->is_left && !imbalanced_node->parent->is_left)
+				else if (!node_to_fix->is_left && !node_to_fix->parent->is_left)
 				{
-					this->_left_rotation(imbalanced_node->parent->parent);
-					imbalanced_node->color = RED;
-					imbalanced_node->parent->color = BLACK;
-					if (imbalanced_node->parent->left)
-						imbalanced_node->parent->left->color = RED;
+					this->_left_rotation(node_to_fix->parent->parent);
+					node_to_fix->color = RED;
+					node_to_fix->parent->color = BLACK;
+					if (node_to_fix->parent->left)
+						node_to_fix->parent->left->color = RED;
 				}
-				else if (!imbalanced_node->is_left && imbalanced_node->parent->is_left)
+				else if (!node_to_fix->is_left && node_to_fix->parent->is_left)
 				{
-					this->_left_right_rotation(imbalanced_node->parent->parent);
-					imbalanced_node->color = BLACK;
-					imbalanced_node->right->color = RED;
-					imbalanced_node->left->color = RED;
+					this->_left_right_rotation(node_to_fix->parent->parent);
+					node_to_fix->color = BLACK;
+					node_to_fix->right->color = RED;
+					node_to_fix->left->color = RED;
 				}
 				else
 				{
-					this->_right_left_rotation(imbalanced_node->parent->parent);
-					imbalanced_node->color = BLACK;
-					imbalanced_node->right->color = RED;
-					imbalanced_node->left->color = RED;
+					this->_right_left_rotation(node_to_fix->parent->parent);
+					node_to_fix->color = BLACK;
+					node_to_fix->right->color = RED;
+					node_to_fix->left->color = RED;
 				}
 			}
 
 		// insert helpers
-			void	_color_flip(node_ptr imbalanced_node)
+			void	_color_flip(node_ptr node_to_fix)
 			{
-				imbalanced_node->parent->color = BLACK;
-				imbalanced_node->parent->parent->color = RED;
-				imbalanced_node->get_aunt()->color = BLACK;
+				node_to_fix->parent->color = BLACK;
+				node_to_fix->parent->parent->color = RED;
+				node_to_fix->get_uncle()->color = BLACK;
 			}
 
 			void	_check_color(node_ptr new_node)
@@ -442,12 +321,12 @@ namespace ft {
 				this->_check_color(new_node->parent);
 			}
 
-			void	_insert_balance(node_ptr imbalanced_node)
+			void	_insert_balance(node_ptr node_to_fix)
 			{
-				if (imbalanced_node->get_aunt() && imbalanced_node->get_aunt()->color == RED)
-					this->_color_flip(imbalanced_node);
+				if (node_to_fix->get_uncle() && node_to_fix->get_uncle()->color == RED)
+					this->_color_flip(node_to_fix);
 				else
-					this->_rotate(imbalanced_node);
+					this->_rotate(node_to_fix);
 			}
 
 			ft::pair<node_ptr, bool>	_insert(node_ptr parent, node_ptr new_node)
@@ -478,7 +357,7 @@ namespace ft {
 				return (ft::make_pair(new_node, true));
 			}
 		// erase helpers
-			void		_assign(node_ptr parent, node_ptr to, bool is_left)
+			void	_assign(node_ptr parent, node_ptr to, bool is_left)
 			{
 				if (is_left)
 					parent->left = to;
@@ -703,6 +582,159 @@ namespace ft {
 					this->_child_is_null(node_to_delete);
 				else
 					this->_both_child_exist(node_to_delete);
+			}
+
+		public:
+		// empty constructor
+			explicit red_black_tree(const key_compare& cmp, const allocator_type& alloc = allocator_type()): _root(NULL), _size(0), _cmp(cmp), _alloc(alloc)
+			{
+				this->_end = this->_create_node(value_type());
+				this->_end->left = NULL;
+				this->_end->right = NULL;
+				this->_end->parent = NULL;
+				this->_end->is_left = 0;
+				this->_end->color = 0;
+			}
+		// copy constructor
+			red_black_tree(const red_black_tree& src): _end(NULL), _root(NULL), _cmp(src._cmp), _alloc(src._alloc)
+			{
+				*this = src;
+			}
+
+		// assignation operator overload
+			red_black_tree&	operator=(const red_black_tree& src)
+			{
+				this->clear();
+				this->_cmp = src._cmp;
+				this->_alloc = src._alloc;
+				this->_remove_end();
+				this->_copy(src._root, src._end);
+
+				return (*this);
+			}
+
+		// destructor
+			~red_black_tree()
+			{
+				this->clear();
+				this->_alloc.destroy(this->_end);
+				this->_alloc.deallocate(this->_end, 1);
+				this->_end = NULL;
+			}
+
+			size_type	size() const
+			{
+				return (this->_size);
+			}
+
+			node_ptr	get_end() const
+			{
+				return(this->_end);
+			}
+
+			void	clear()
+			{
+				this->_remove_end();
+				this->_clear(this->_root);
+				this->_size = 0;
+				this->_root = NULL;
+			}
+
+			// will search the whole tree for the given key-value pair
+			node_ptr	find(value_type key) const
+			{
+				node_ptr	node = this->_find(this->_root, key);
+				if (!node)
+					return (this->_end);
+				return(node);
+			}
+
+			node_ptr	exist(value_type key) const
+			{
+				node_ptr	node = this->_find(this->_root, key);
+				return(node);
+			}
+
+			void	swap(red_black_tree& src)
+			{
+				node_ptr		_end_tmp = this->_end;
+				node_ptr		_root_tmp = this->_root;
+				size_type		_size_tmp = this->_size;
+				key_compare		_cmp_tmp = this->_cmp;
+				allocator_type	_alloc_tmp = this->_alloc;
+
+				this->_end = src._end;
+				this->_root = src._root;
+				this->_size = src._size;
+				this->_cmp = src._cmp;
+				this->_alloc = src._alloc;
+				src._end = _end_tmp;
+				src._root = _root_tmp;
+				src._size = _size_tmp;
+				src._cmp = _cmp_tmp;
+				src._alloc = _alloc_tmp;
+			}
+
+			node_ptr	get_lowest() const
+			{
+				node_ptr	res = this->_root;
+
+				if (!res)
+					return (this->_end);
+				while (res->left)
+					res = res->left;
+				return (res);
+			}
+
+			node_ptr	get_biggest() const
+			{
+				node_ptr	res = this->_root;
+
+				if (!res)
+					return (NULL);
+				while (res->right && res->right != this->_end)
+					res = res->right;
+				return (res);
+			}
+
+			ft::pair<node_ptr, bool>	insert(value_type value)
+			{
+				node_ptr	exists = this->exist(value);
+
+				if (exists)
+				 	return (ft::make_pair(exists, false));
+				node_ptr new_node = this->_create_node(value);
+				if (!this->_root)
+				{
+					this->_root = new_node;
+					this->_root->color = BLACK;
+					++this->_size;
+					this->_connect_end();
+					return (ft::make_pair(new_node, true));
+				}
+				this->_remove_end();
+				ft::pair<node_ptr, bool> res = this->_insert(this->_root, new_node);
+				++this->_size;
+				this->_connect_end();
+				return (res);
+			}
+
+			void	erase(value_type key)
+			{
+				node_ptr	node_to_delete = this->exist(key);
+				if (!node_to_delete)
+					return ;
+				else if (this->_size == 1)
+					this->_root = NULL;
+				else
+				{
+					this->_remove_end();
+					this->_erase(node_to_delete);
+				}
+				this->_alloc.destroy(node_to_delete);
+				this->_alloc.deallocate(node_to_delete, 1);
+				--this->_size;
+				this->_connect_end();
 			}
 	};
 }

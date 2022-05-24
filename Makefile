@@ -6,7 +6,7 @@ STD_NAME	=	std_containers
 CXX			=	c++
 
 #standard flags
-CXXFLAGS	=	-std=c++98  -Wall -Wextra -Werror
+CXXFLAGS	=	-std=c++98 -Wall -Wextra -Werror
 
 #additional flags
 # CXXFLAGS	+=	-g # add this to get debug information

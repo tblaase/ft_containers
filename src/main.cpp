@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/23 17:50:18 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/24 17:41:40 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int main()
 			std::cerr << "\tvct_1 exception caught!!!! " << e.what() << std::endl;
 			goto next_vct;
 		}
+		std::cout << "\tmax_size: " << vct_1->max_size() << std::endl;
 		std::cout << "\tvct_1 size: " << vct_1->size() << std::endl;
 		std::cout << "\tvct_1 capacity: " << vct_1->capacity() << std::endl;
 		try
@@ -247,6 +248,7 @@ int main()
 		{
 			map_1->insert(TESTED_NAMESPACE::make_pair(i, i + 1));
 		}
+		std::cout << "\tmax_size: " << map_1->max_size() << std::endl;
 		std::cout << "\tmap size: " << map_1->size() << std::endl;
 
 		std::cout << "\titerating over map using the iterator" << std::endl;
