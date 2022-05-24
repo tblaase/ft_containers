@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:50:45 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/23 17:46:53 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/24 13:27:16 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ namespace ft
 
 				iterator	begin()
 				{
-					return(iterator(_array));
+					return(iterator(this->_array));
 				}
 
 				const_iterator	begin() const

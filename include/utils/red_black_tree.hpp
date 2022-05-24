@@ -137,7 +137,7 @@ namespace ft {
 				return(this->_end);
 			}
 
-			void		clear()
+			void	clear()
 			{
 				this->_cut_end_connections();
 				this->_clear(this->_root);
@@ -147,9 +147,7 @@ namespace ft {
 
 			node_ptr	find(value_type key) const
 			{
-				node_ptr	node;
-
-				node = this->_find(this->_root, key);
+				node_ptr	node = this->_find(this->_root, key);
 				if (!node)
 					return (this->_end);
 				return(node);
@@ -157,9 +155,7 @@ namespace ft {
 
 			node_ptr	exist(value_type key) const
 			{
-				node_ptr	node;
-
-				node = this->_find(this->_root, key);
+				node_ptr	node = this->_find(this->_root, key);
 				return(node);
 			}
 
@@ -207,14 +203,13 @@ namespace ft {
 
 			ft::pair<node_ptr, bool>	insert(value_type value)
 			{
-				node_ptr					exists;
-				node_ptr					new_node;
-				ft::pair<node_ptr, bool>	res;
+				node_ptr					exists = this->exist(value);
+				// node_ptr					new_node;
+				// ft::pair<node_ptr, bool>	res;
 
-				exists = this->exist(value);
 				if (exists)
 				 	return (ft::make_pair(exists, false));
-				new_node = this->_create_node(value);
+				node_ptr new_node = this->_create_node(value);
 				if (!this->_root)
 				{
 					this->_root = new_node;
@@ -224,7 +219,7 @@ namespace ft {
 					return (ft::make_pair(new_node, true));
 				}
 				this->_cut_end_connections();
-				res = this->_insert(this->_root, new_node);
+				ft::pair<node_ptr, bool> res = this->_insert(this->_root, new_node);
 				++this->_size;
 				this->_connect_end();
 				return (res);
@@ -232,9 +227,7 @@ namespace ft {
 
 			void	erase(value_type key)
 			{
-				node_ptr	node_to_delete;
-
-				node_to_delete = this->exist(key);
+				node_ptr	node_to_delete = this->exist(key);
 				if (!node_to_delete)
 					return ;
 				else if (this->_size == 1)
@@ -254,9 +247,7 @@ namespace ft {
 		private:
 			node_ptr	_create_node(value_type value)
 			{
-				node_ptr	new_node;
-
-				new_node = this->_alloc.allocate(1);
+				node_ptr	new_node = this->_alloc.allocate(1);
 				this->_alloc.construct(new_node, value);
 
 				return (new_node);
@@ -290,18 +281,16 @@ namespace ft {
 			{
 				if (!node)
 					return (NULL);
-				else if (_cmp(key, node->value) && !this->_cmp(node->value, key))
+				else if (this->_cmp(key, node->value) && !this->_cmp(node->value, key))
 					return (this->_find(node->left, key));
-				else if (!_cmp(key, node->value) && this->_cmp(node->value, key))
+				else if (!this->_cmp(key, node->value) && this->_cmp(node->value, key))
 					return (this->_find(node->right, key));
 				return (node);
 			}
 
 			void	_cut_end_connections()
 			{
-				node_ptr	biggest;
-
-				biggest = this->get_biggest();
+				node_ptr	biggest = this->get_biggest();
 				if (biggest)
 					biggest->right = NULL;
 				if (this->_end)
@@ -310,9 +299,7 @@ namespace ft {
 
 			void	_connect_end()
 			{
-				node_ptr	biggest;
-
-				biggest = get_biggest();
+				node_ptr	biggest = get_biggest();
 				if (biggest)
 					biggest->right = this->_end;
 				if (!this->_end)
@@ -335,9 +322,7 @@ namespace ft {
 
 			void	_left_rotation(node_ptr imbalanced_node)
 			{
-				node_ptr	tmp;
-
-				tmp = imbalanced_node->right;
+				node_ptr	tmp = imbalanced_node->right;
 				imbalanced_node->right = tmp->left;
 				if (imbalanced_node->right)
 				{
@@ -370,9 +355,7 @@ namespace ft {
 
 			void	_right_rotation(node_ptr imbalanced_node)
 			{
-				node_ptr	tmp;
-
-				tmp = imbalanced_node->left;
+				node_ptr	tmp = imbalanced_node->left;
 				imbalanced_node->left = tmp->right;
 				if (imbalanced_node->left)
 				{
@@ -469,7 +452,7 @@ namespace ft {
 
 			ft::pair<node_ptr, bool>	_insert(node_ptr parent, node_ptr new_node)
 			{
-				if (_cmp(parent->value, new_node->value))
+				if (this->_cmp(parent->value, new_node->value))
 				{
 					if (!parent->right)
 					{
@@ -527,9 +510,7 @@ namespace ft {
 
 			node_ptr	_get_successor(node_ptr node)
 			{
-				node_ptr	res;
-
-				res = node->right;
+				node_ptr	res = node->right;
 				while (res->left)
 					res = res->left;
 				return(res);
@@ -663,10 +644,9 @@ namespace ft {
 			void	_child_is_null(node_ptr node_to_delete)
 			{
 				bool		is_left;
-				node_ptr	parent;
+				node_ptr	parent = NULL;
 				node_ptr	replacement;
 
-				parent = NULL;
 				if (!node_to_delete->left && !node_to_delete->right)
 				{
 					replacement = this->_replace(node_to_delete, NULL);
@@ -694,9 +674,7 @@ namespace ft {
 			{
 				bool		is_left;
 				node_ptr	parent;
-				node_ptr	replacement;
-
-				replacement = this->_get_successor(node_to_delete);
+				node_ptr	replacement = this->_get_successor(node_to_delete);
 				if (replacement == node_to_delete->right)
 				{
 					this->_replace(node_to_delete, replacement);

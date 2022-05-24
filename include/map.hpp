@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 08:20:09 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/23 17:16:52 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/24 14:29:45 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,77 +107,73 @@ namespace ft {
 
 			iterator	begin()
 			{
-				return (iterator(_tree.get_lowest()));
+				return (iterator(this->_tree.get_lowest()));
 			}
 
 			const_iterator	begin() const
 			{
-				return (const_iterator(_tree.get_lowest()));
+				return (const_iterator(this->_tree.get_lowest()));
 			}
 
 			iterator	end() {
-				return (iterator(_tree.get_end()));
+				return (iterator(this->_tree.get_end()));
 			}
 
 			const_iterator	end() const
 			{
-				return (const_iterator(_tree.get_end()));
+				return (const_iterator(this->_tree.get_end()));
 			}
 
 			reverse_iterator	rbegin()
 			{
-				return (reverse_iterator(end()));
+				return (reverse_iterator(this->end()));
 			}
 
 			const_reverse_iterator	rbegin() const
 			{
-				return (const_reverse_iterator(end()));
+				return (const_reverse_iterator(this->end()));
 			}
 
 			reverse_iterator	rend()
 			{
-				return (reverse_iterator(begin()));
+				return (reverse_iterator(this->begin()));
 			}
 
 			const_reverse_iterator	rend() const
 			{
-				return (const_reverse_iterator(begin()));
+				return (const_reverse_iterator(this->begin()));
 			}
 
 		// ##### Member functions for Capacity #####
 
 			bool	empty() const
 			{
-				return (_tree.size() == 0);
+				return (this->_tree.size() == 0);
 			}
 
 			size_type	size() const
 			{
-				return (_tree.size());
+				return (this->_tree.size());
 			}
 
 			size_type	max_size() const
 			{
-				return (_max_size_alloc.max_size());
+				return (this->_max_size_alloc.max_size());
 			}
 
 		// ##### Member functions for Element access #####
 
 			mapped_type&	operator[](const key_type& key)
 			{
-				node_ptr	node;
-
-				node = _tree.exist(ft::make_pair(key, mapped_type()));
+				node_ptr	node = this->_tree.exist(ft::make_pair(key, mapped_type()));
 				if (!node)
-					return (insert(ft::make_pair(key, mapped_type())).first->second);
+					return (this->insert(ft::make_pair(key, mapped_type())).first->second);
 				return (node->value.second);
 			}
 
 			mapped_type&	at(const key_type& key)
 			{
-				node_ptr	node;
-
-				node = _tree.exist(ft::make_pair(key, mapped_type()));
+				node_ptr	node = this->_tree.exist(ft::make_pair(key, mapped_type()));
 				if (!node)
 					throw (std::out_of_range("map"));
 				return (node->value.second);
@@ -185,9 +181,7 @@ namespace ft {
 
 			const mapped_type&	at(const key_type& key) const
 			{
-				node_ptr	node;
-
-				node = _tree.exist(ft::make_pair(key, mapped_type()));
+				node_ptr	node = this->_tree.exist(ft::make_pair(key, mapped_type()));
 				if (!node)
 					throw (std::out_of_range("map"));
 				return (node->value.second);
@@ -197,14 +191,14 @@ namespace ft {
 
 			ft::pair<iterator, bool>	insert(const value_type& value)
 			{
-				ft::pair<node_ptr, bool> new_elem = _tree.insert(value);
+				ft::pair<node_ptr, bool> new_elem = this->_tree.insert(value);
 				return (ft::make_pair(iterator(new_elem.first), new_elem.second));
 			}
 
 			iterator	insert(iterator pos, const value_type& value)
 			{
 				(void)pos;
-				ft::pair<node_ptr, bool> new_elem = _tree.insert(value);
+				ft::pair<node_ptr, bool> new_elem = this->_tree.insert(value);
 				return (iterator(new_elem.first));
 			}
 
@@ -213,14 +207,14 @@ namespace ft {
 				{
 					while (first != last)
 					{
-						_tree.insert(*first);
+						this->_tree.insert(*first);
 						++first;
 					}
 				}
 
 			void	erase(iterator pos)
 			{
-				_tree.erase(*pos);
+				this->_tree.erase(*pos);
 			}
 
 			void	erase(iterator first, iterator last)
@@ -228,27 +222,25 @@ namespace ft {
 				while (first != last)
 				{
 					iterator	to_delete = first++;
-					erase(to_delete);
+					this->erase(to_delete);
 				}
 			}
 
 			size_type	erase(const key_type& key)
 			{
-				size_type	old_size;
-
-				old_size = _tree.size();
-				_tree.erase(ft::make_pair(key, mapped_type()));
-				return (old_size - _tree.size());
+				size_type	old_size = this->_tree.size();
+				this->_tree.erase(ft::make_pair(key, mapped_type()));
+				return (old_size - this->_tree.size());
 			}
 
 			void	swap(map& src)
 			{
-				_tree.swap(src._tree);
+				this->_tree.swap(src._tree);
 			}
 
 			void	clear()
 			{
-				_tree.clear();
+				this->_tree.clear();
 			}
 
 		// ##### Member functions for Observers #####
@@ -267,17 +259,17 @@ namespace ft {
 
 			iterator	find(const key_type& key)
 			{
-				return (iterator(_tree.find(ft::make_pair(key, mapped_type()))));
+				return (iterator(this->_tree.find(ft::make_pair(key, mapped_type()))));
 			}
 
 			const_iterator	find(const key_type& key) const
 			{
-				return (iterator(_tree.find(ft::make_pair(key, mapped_type()))));
+				return (iterator(this->_tree.find(ft::make_pair(key, mapped_type()))));
 			}
 
 			size_type	count(const key_type& key) const
 			{
-				if (_tree.exist(ft::make_pair(key, mapped_type())))
+				if (this->_tree.exist(ft::make_pair(key, mapped_type())))
 					return (1);
 				return (0);
 			}
@@ -286,8 +278,8 @@ namespace ft {
 			{
 				iterator it;
 
-				it = begin();
-				while (it != end() && it->first < key)
+				it = this->begin();
+				while (it != this->end() && it->first < key)
 					it++;
 				return (it);
 			}
@@ -296,8 +288,8 @@ namespace ft {
 			{
 				const_iterator	it;
 
-				it = begin();
-				while (it != end() && it->first < key)
+				it = this->begin();
+				while (it != this->end() && it->first < key)
 					++it;
 				return (it);
 			}
@@ -306,8 +298,8 @@ namespace ft {
 			{
 				iterator it;
 
-				it = begin();
-				while (it != end() && it->first <= key)
+				it = this->begin();
+				while (it != this->end() && it->first <= key)
 					++it;
 				return (it);
 			}
@@ -316,26 +308,26 @@ namespace ft {
 			{
 				const_iterator	it;
 
-				it = begin();
-				while (it != end() && it->first <= key)
+				it = this->begin();
+				while (it != this->end() && it->first <= key)
 					++it;
 				return (it);
 			}
 
 			ft::pair<iterator, iterator>	equal_range(const key_type& key)
 			{
-				return (ft::make_pair<iterator, iterator>(lower_bound(key), upper_bound(key)));
+				return (ft::make_pair<iterator, iterator>(this->lower_bound(key), this->upper_bound(key)));
 			}
 
 			ft::pair<const_iterator, const_iterator>	equal_range(const key_type& key) const
 			{
-				return (ft::make_pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key)));
+				return (ft::make_pair<const_iterator, const_iterator>(this->lower_bound(key), this->upper_bound(key)));
 			}
 
 		// ##### Getter for the Allocator #####
 			allocator_type	get_allocator() const
 			{
-				return (_alloc);
+				return (this->_alloc);
 			}
 	};
 
