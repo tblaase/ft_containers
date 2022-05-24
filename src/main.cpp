@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/24 17:41:40 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/24 18:29:00 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int main()
 	// std::string resize_str;
 	// std::getline(std::cin, resize_str);
 	// if (resize_str.length() == 0)
-		resize_val = 0;
+		resize_val = 500000050;
 	// else
 	// 	resize_val = std::atoll(resize_str.c_str());
 
@@ -124,7 +124,7 @@ int main()
 		std::cout << "\tvct_2 capacity: " << vct_2.capacity() << std::endl;
 		it = vct_2.begin();
 		std::cout << "\tprinting the first 5 elements of vct_1" << std::endl;
-		for (size_t i = 0; i < 5; ++i)
+		for (size_t i = 0; i < 5 && it != vct_2.end(); ++i)
 			std::cout << "\telem " << i << ": " << *it++ << std::endl;
 
 		std::cout << "\terasing vct_2 now" << std::endl;
@@ -253,7 +253,7 @@ int main()
 
 		std::cout << "\titerating over map using the iterator" << std::endl;
 		TESTED_NAMESPACE::map<int, int>::const_iterator it = map_1->begin();
-		for (size_t i = 0; i < 15; ++i)
+		for (size_t i = 0; i < 15 && it != map_1->end(); ++i)
 		{
 			std::cout << "key: " << it->first << "\tvalue: " << it->second << std::endl;
 			++it;
