@@ -6,7 +6,7 @@
 /*   By: tblaase <tblaase@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:32:13 by tblaase           #+#    #+#             */
-/*   Updated: 2022/05/24 18:55:57 by tblaase          ###   ########.fr       */
+/*   Updated: 2022/05/26 15:31:35 by tblaase          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,7 @@ int main()
 		TESTED_NAMESPACE::map<int, int>::const_iterator it = map_1->begin();
 		for (size_t i = 0; i < 15 && it != map_1->end(); ++i)
 		{
-			std::cout << "key: " << it->first << "\tvalue: " << it->second << std::endl;
+			std::cout << "\tkey: " << it->first << "\tvalue: " << it->second << std::endl;
 			++it;
 		}
 		std::cout << "\toutput for adding `make_pair(0, 55)`, a duplicate element(this output is a bool): " << map_1->insert(TESTED_NAMESPACE::make_pair(0, 55)).second << std::endl;
