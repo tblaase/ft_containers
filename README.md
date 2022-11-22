@@ -5,7 +5,7 @@ My solution for ft_containers of the common-core of 42 school.
 The goal of this project was to recode the STL-containers of c++98.<br>
 The mandatory containers where `std::vector`, `std::stack` and `std::map`.<br>
 They had to have the exact same structure as the original containers and support every function the standard-containers supported.<br>
-Almmost all of the needed information can be found at [cplusplus.com](https://cplusplus.com/reference/stl/) or directly from the source code of the different libraries.<br>
+Almost all of the needed information can be found at [cplusplus.com](https://cplusplus.com/reference/stl/) or directly from the source code of the different libraries.<br>
 
 ## Testing
 In the end of the project you had to make sure the containers worked as intended and had a good performance.<br>
