@@ -16,6 +16,8 @@ For that I created a [Makefile](/Makefile) that compiles my [main.cpp](/src/main
 
 After that you can run them individually to see the output.<br>
 Or run my [`test.sh`](/test.sh), which does not need the `make all` before, since it runs `make re` anyways to make sure everything is in perfect working order.<br>
+This testing is also included in the github-actions of this project and are running automated on each push or pull request on the main branch.<br>
+The `.yml` for the github actions can be found [here](/.github/workflows/c-cpp.yml).<br>
 My testing script will run the two binaries one after another, put their output into .log files and diff them in two different ways.<br>
 ![diff1](/readme_additions/diff1.png)<br>
 This diff shows differences in red and similarities in green.<br>
