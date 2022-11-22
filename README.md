@@ -10,7 +10,9 @@ They had to have the exact same structure as the original containers and support
 In the end of the project you had to make sure the containers worked as intended and had a good performance.<br>
 For that I created a Makefile that compiles my [main.cpp](/src/main.cpp) with `make all` into two different binaries:
  - once with the `std::` namespace
- - once with the `ft::` namespace<br>
+ - once with the `ft::` namespace
+ 
+ 
 After that you can run them individually to see the output.<br>
 Or run my [`test.sh`](/test.sh), which does not need the `make all` before, since it runs `make re` anyways to make sure everything is in perfect working order.<br>
 My testing script will run the two binaries one after another, put their output into .log files and diff them in two different ways.<br>
