@@ -5,14 +5,15 @@ My solution for ft_containers of the common-core of 42 school.
 The goal of this project was to recode the STL-containers of c++98.<br>
 The mandatory containers where `std::vector`, `std::stack` and `std::map`.<br>
 They had to have the exact same structure as the original containers and support every function the standard-containers supported.<br>
+Almmost all of the needed information can be found at [cplusplus.com](https://cplusplus.com/reference/stl/) or directly from the source code of the different libraries.<br>
 
 ## Testing
 In the end of the project you had to make sure the containers worked as intended and had a good performance.<br>
-For that I created a Makefile that compiles my [main.cpp](/src/main.cpp) with `make all` into two different binaries:
+For that I created a [Makefile](/Makefile) that compiles my [main.cpp](/src/main.cpp) with `make all` into two different binaries:
  - once with the `std::` namespace
  - once with the `ft::` namespace
- 
- 
+
+
 After that you can run them individually to see the output.<br>
 Or run my [`test.sh`](/test.sh), which does not need the `make all` before, since it runs `make re` anyways to make sure everything is in perfect working order.<br>
 My testing script will run the two binaries one after another, put their output into .log files and diff them in two different ways.<br>
